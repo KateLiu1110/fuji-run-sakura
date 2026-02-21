@@ -107,47 +107,56 @@
 ```
 fuji_sakura_run/
 │
-├── backend/                     # 後端 FastAPI 專案
-│   ├── main.py                  # API 路由定義
-│   ├── models.py                # Pydantic 數據模型
-│   ├── database.py              # 數據庫操作
-│   ├── test_main.py             # 後端測試
-│   ├── requirements.txt         # Python 依賴
-│   └── README.md                # 後端說明
+├── backend/                       # 後端 FastAPI 專案
+│   ├── main.py                    # API 路由定義與主應用
+│   ├── models.py                  # Pydantic 數據模型
+│   ├── database.py                # 數據庫操作函數
+│   ├── test_main.py               # 後端 API 端點測試
+│   ├── test_database.py           # 數據庫函數測試
+│   ├── test_models.py             # 數據模型驗證測試
+│   ├── requirements.txt           # Python 依賴
+│   ├── requirements-test.txt      # 測試依賴
+│   └── README.md                  # 後端說明
 │
-├── src/                         # 前端 React 專案
-│   ├── components/              # React 組件
-│   │   ├── Dashboard.tsx        # 個人數據面板（自律表）
-│   │   ├── SakuraFalling.tsx    # 櫻花飄落動畫
-│   │   ├── Header.tsx           # 導航欄
-│   │   ├── Hero.tsx             # 首頁英雄區塊
-│   │   ├── Comments.tsx         # 留言板
-│   │   ├── Community.tsx        # 社群頁面
-│   │   ├── SakuraRoutes.tsx     # 櫻花路線地圖
-│   │   ├── GPSTracker.tsx       # GPS 追蹤器
-│   │   ├── MtFujiGuide.tsx      # 富士山訓練指南
-│   │   └── RunningKnowledge.tsx # 跑步知識
+├── src/                           # 前端 React 專案
+│   ├── pages/                     # 頁面組件
+│   │   ├── HomePage.tsx           # 首頁（櫻花路線、知識、留言板）
+│   │   ├── SelfDisciplinePage.tsx # 自律表頁面（儀表板、統計）
+│   │   └── LoginPage.tsx          # 登入頁面
 │   │
-│   ├── services/                # API 服務層
-│   │   ├── api.ts               # 後端 API 通訊
-│   │   └── api.test.ts          # API 測試
+│   ├── components/                # 可重用組件
+│   │   ├── Dashboard.tsx          # 個人數據面板
+│   │   ├── SakuraFalling.tsx      # 櫻花飄落動畫
+│   │   ├── Header.tsx             # 導航欄
+│   │   ├── Hero.tsx               # 首頁英雄區塊
+│   │   ├── Comments.tsx           # 留言板
+│   │   ├── Community.tsx          # 社群頁面
+│   │   ├── SakuraRoutes.tsx       # 櫻花路線地圖
+│   │   ├── GPSTracker.tsx         # GPS 追蹤器
+│   │   ├── MtFujiGuide.tsx        # 富士山訓練指南
+│   │   └── RunningKnowledge.tsx   # 跑步知識
 │   │
-│   ├── store/                   # 全局狀態管理
-│   │   ├── UserContext.tsx      # 用戶狀態
-│   │   ├── RunContext.tsx       # 跑步記錄狀態
-│   │   └── CommunityContext.tsx # 社群狀態
+│   ├── services/                  # API 服務層（前後端分離）
+│   │   └── api.ts                 # 後端 API 通訊封裝
 │   │
-│   ├── types/                   # TypeScript 類型定義
+│   ├── __tests__/                 # 前端測試檔案
+│   │   ├── App.test.tsx           # App 路由測試
+│   │   ├── HomePage.test.tsx      # 首頁測試
+│   │   ├── SelfDisciplinePage.test.tsx  # 自律表測試
+│   │   ├── LoginPage.test.tsx     # 登入頁測試
+│   │   └── api.test.ts            # API 服務測試
+│   │
+│   ├── types/                     # TypeScript 類型定義
 │   │   └── index.ts
 │   │
-│   ├── constants/               # 常量配置
+│   ├── constants/                 # 常量配置
 │   │   └── index.ts
 │   │
-│   ├── App.tsx                  # 主應用組件
-│   ├── index.tsx                # React 入口
-│   └── index.css                # 全局樣式
+│   ├── App.tsx                    # 主應用組件（路由容器）
+│   ├── index.tsx                  # React 入口
+│   └── index.css                  # 全局樣式
 │
-├── package.json                 # NPM 配置
+├── package.json                   # NPM 配置
 ├── tsconfig.json                # TypeScript 配置
 ├── vite.config.ts               # Vite 配置
 ├── jest.config.ts               # Jest 測試配置
@@ -234,6 +243,8 @@ python -m uvicorn main:app --reload
 
 ## 🧪 測試
 
+本專案包含完整的前後端測試，確保功能正確性與業務邏輯一致性。
+
 ### 前端測試
 
 ```bash
@@ -241,16 +252,28 @@ python -m uvicorn main:app --reload
 npm test
 
 # 運行特定測試文件
-npm test Dashboard.test.tsx
+npm test App.test.tsx
 
 # 測試覆蓋率
 npm test -- --coverage
+
+# Watch 模式（開發時使用）
+npm test -- --watch
 ```
 
-**測試文件**：
-- `src/components/Dashboard.test.tsx` - Dashboard 組件測試
-- `src/components/SakuraFalling.test.tsx` - 動畫組件測試
-- `src/services/api.test.ts` - API 服務測試
+**測試文件結構**：
+- `src/__tests__/App.test.tsx` - 主應用路由與導航測試
+- `src/__tests__/HomePage.test.tsx` - 首頁組件與內容測試
+- `src/__tests__/SelfDisciplinePage.test.tsx` - 自律表頁面功能測試
+- `src/__tests__/LoginPage.test.tsx` - 登入表單驗證測試
+- `src/__tests__/api.test.ts` - API 服務層測試
+
+**測試覆蓋範圍**：
+- ✅ 頁面渲染與導航
+- ✅ 用戶交互（打卡、登入、登出）
+- ✅ 表單驗證
+- ✅ 狀態管理（localStorage）
+- ✅ API 請求與錯誤處理
 
 ### 後端測試
 
@@ -258,17 +281,45 @@ npm test -- --coverage
 cd backend
 
 # 安裝測試依賴
-pip install pytest pytest-cov
+pip install -r requirements-test.txt
 
-# 運行測試
+# 運行所有測試
 pytest
+
+# 運行特定測試文件
+pytest test_main.py
 
 # 測試覆蓋率
 pytest --cov=. --cov-report=html
+
+# 顯示詳細輸出
+pytest -v
+
+# 顯示測試失敗的詳細信息
+pytest -vv
 ```
 
-**測試文件**：
+**測試文件結構**：
 - `backend/test_main.py` - API 端點測試
+- `backend/test_database.py` - 數據庫函數測試
+- `backend/test_models.py` - Pydantic 模型驗證測試
+
+**測試覆蓋範圍**：
+- ✅ 用戶註冊、登入、驗證
+- ✅ 跑步記錄 CRUD 操作
+- ✅ 評論功能
+- ✅ 櫻花路線查詢
+- ✅ 數據模型驗證
+- ✅ 密碼哈希與驗證
+- ✅ 用戶統計數據計算
+- ✅ CORS 配置
+
+### 測試最佳實踐
+
+1. **運行測試前**：確保後端服務未運行，避免端口衝突
+2. **數據隔離**：每個測試使用獨立的數據庫環境
+3. **覆蓋率目標**：維持 80% 以上的測試覆蓋率
+4. **CI/CD 整合**：可配合 GitHub Actions 自動運行測試
 
 ---
 
@@ -309,31 +360,66 @@ Authorization: Bearer <token>
 
 #### 獲取用戶跑步記錄
 ```http
-GET /api/runs?userId=<user_id>
-Authorization: Bearer <token>
+GET /api/runs/user/{userId}
+```
+
+**Response:**
+```json
+[
+  {
+    "id": "run_123",
+    "userId": "user_456",
+    "date": "2026-02-21",
+    "distance": 5.2,
+    "time": "30:00",
+    "route": "淡水天元宮櫻花環線",
+    "type": "🌸",
+    "location": {"lat": 25.033, "lng": 121.565},
+    "created_at": "2026-02-21T10:00:00"
+  }
+]
 ```
 
 #### 新增跑步記錄
 ```http
 POST /api/runs
-Authorization: Bearer <token>
 Content-Type: application/json
 
 {
-  "userId": "user_123",
+  "userId": "user_456",
   "date": "2026-02-21",
   "distance": 5.2,
   "time": "30:00",
-  "route": "淡水河濱",
-  "type": "訓練",
-  "location": "新北市淡水區"
+  "route": "淡水天元宮櫻花環線",
+  "type": "🌸",
+  "location": {"lat": 25.033, "lng": 121.565}
 }
 ```
 
+**支援的跑步類型**：
+- `🌸` - 櫻花路線
+- `⚡` - 速度訓練
+- `🏔️` - 山路訓練
+- `🏃` - 一般訓練
+
 #### 刪除跑步記錄
 ```http
-DELETE /api/runs/<run_id>
-Authorization: Bearer <token>
+DELETE /api/runs/{run_id}
+```
+
+#### 獲取用戶統計數據
+```http
+GET /api/users/{userId}/stats
+```
+
+**Response:**
+```json
+{
+  "totalDistance": 48.5,
+  "totalTime": "4:30:00",
+  "totalRuns": 12,
+  "averagePace": "6:15"
+}
 ```
 
 ### 評論相關
@@ -341,6 +427,19 @@ Authorization: Bearer <token>
 #### 獲取所有評論
 ```http
 GET /api/comments
+```
+
+**Response:**
+```json
+[
+  {
+    "id": "comment_123",
+    "author": "小林",
+    "content": "今天跑得很開心！",
+    "timestamp": "2026-02-21T10:00:00",
+    "userId": "user_456"
+  }
+]
 ```
 
 #### 新增評論
@@ -360,6 +459,79 @@ Content-Type: application/json
 #### 獲取所有櫻花路線
 ```http
 GET /api/routes
+```
+
+**Response:**
+```json
+[
+  {
+    "id": "1",
+    "name": "武陵農場櫻花環線",
+    "location": "台中市和平區",
+    "distance": 5.2,
+    "difficulty": "easy",
+    "sakuraLevel": 5,
+    "description": "紅粉佳人盛開，最美的櫻花路線",
+    "bestSeason": "2-3月"
+  }
+]
+```
+
+#### 獲取單一路線詳情
+```http
+GET /api/routes/{route_id}
+```
+
+### 健康檢查
+
+#### 檢查 API 狀態
+```http
+GET /api/health
+```
+
+**Response:**
+```json
+{
+  "status": "healthy",
+  "timestamp": "2026-02-21T10:00:00"
+}
+```
+
+### API 使用範例
+
+**前端調用範例（使用 api.ts 服務層）：**
+
+```typescript
+import { api } from './services/api';
+
+// 用戶註冊
+const response = await api.user.register({
+  name: "測試用戶",
+  email: "test@example.com",
+  password: "password123"
+});
+
+if (response.error) {
+  console.error('註冊失敗:', response.error);
+} else {
+  console.log('註冊成功:', response.data);
+}
+
+// 獲取跑步記錄
+const runsResponse = await api.run.getUserRuns('user_123');
+if (runsResponse.data) {
+  console.log('跑步記錄:', runsResponse.data);
+}
+
+// 創建新的跑步記錄
+const newRunResponse = await api.run.create({
+  userId: 'user_123',
+  date: '2026-02-21',
+  distance: 5.2,
+  time: '30:00',
+  route: '淡水天元宮',
+  type: '🌸'
+});
 ```
 
 #### 獲取特定路線
@@ -425,107 +597,152 @@ Authorization: Bearer <token>
 - ✅ 無需額外配置 n8n 服務
 
 ### 如需 n8n 功能
+### 如需 n8n 功能
 
 如果您想要使用原本規劃的 n8n 自動化功能，可以：
 
-1. 獨立部署 n8n 服務：
+1. **獨立部署 n8n 服務**：
    ```bash
+   # 使用 Docker
    docker run -it --rm --name n8n -p 5678:5678 n8nio/n8n
+   
+   # 或使用 npm
+   npx n8n
    ```
 
-2. 手動創建工作流程：
-   - 匯率監控：使用 ExchangeRate-API
-   - 天氣預報：使用 OpenWeatherMap API
-   - Strava 同步：設定 Strava Webhook
+2. **手動創建工作流程**：
+   - **匯率監控**：使用 ExchangeRate-API 或 Alpha Vantage API
+   - **天氣預報**：使用 OpenWeatherMap API
+   - **Strava 同步**：設定 Strava Webhook 觸發器
+   - **Gemini AI 整合**：連接 Google Gemini API 生成鼓勵語
 
-3. 參考 `STRUCTURE.md` 中的 n8n 章節（如存在）
+3. **前端整合建議**：
+   ```typescript
+   // 在 src/services/ 中創建 n8nService.ts
+   const N8N_WEBHOOK_URL = 'http://localhost:5678/webhook/fuji-run';
+   
+   export async function triggerN8nWorkflow(data: any) {
+     const response = await fetch(N8N_WEBHOOK_URL, {
+       method: 'POST',
+       headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify(data)
+     });
+     return response.json();
+   }
+   ```
 
 ---
 
 ## 🎨 特色設計
 
 ### UI/UX 設計理念
-- **日式美學**：櫻花、富士山視覺元素
-- **扁平化設計**：現代簡約風格
-- **響應式佈局**：完美支援手機、平板、桌面
-- **動畫效果**：櫻花飄落、平滑過渡
+- **日式美學**：櫻花、富士山視覺元素貫穿整體設計
+- **扁平化設計**：現代簡約風格，注重內容而非裝飾
+- **響應式佈局**：完美支援手機、平板、桌面設備
+- **動畫效果**：櫻花飄落特效、平滑過渡動畫
+- **無障礙設計**：符合 WCAG 2.1 標準
+
+### 頁面架構
+- **首頁（HomePage）**：展示櫻花路線、跑步知識、社群留言板
+- **自律表頁面（SelfDisciplinePage）**：
+  - 儀表板：顯示累積里程、運動時數、解鎖徽章
+  - 統計分析：週度跑步數據、配速分析、熱量消耗
+  - 打卡系統：月曆視覺化、連續打卡追蹤
+  - n8n 自動化：智慧路跑推薦、GA4 數據同步
+- **登入頁面（LoginPage）**：簡潔的登入表單設計
 
 ### 數據持久化
-- LocalStorage：用戶登入狀態、打卡記錄、累積里程
-- 後端數據庫：完整跑步記錄、用戶資料、社群互動
+- **LocalStorage**：用戶登入狀態、打卡記錄
+- **後端數據庫**：完整跑步記錄、用戶資料、社群互動
+- **未來規劃**：Redis 快取、PostgreSQL 生產環境
 
 ### 安全性
-- 密碼哈希：SHA-256 加密
-- Token 驗證：Bearer Token 機制
-- CORS 配置：限制前端訪問來源
+- **密碼哈希**：SHA-256 加密儲存
+- **CORS 配置**：限制前端訪問來源
+- **輸入驗證**：Pydantic 模型驗證
+- **未來增強**：JWT Token、OAuth 2.0
 
 ---
 
 ## 🔮 未來規劃
 
-- [ ] 整合真實數據庫（PostgreSQL）
-- [ ] JWT Token 完整實現
-- [ ] GPS 即時追蹤功能
-- [ ] 社群互動增強（按讚、追蹤）
-- [ ] 排行榜系統
-- [ ] 實體獎牌兌換流程
-- [ ] 手機 App 版本
-- [ ] Strava 官方 API 整合
+### 短期目標（1-3 個月）
+- [ ] 整合真實數據庫（PostgreSQL / MongoDB）
+- [ ] JWT Token 完整實現與 Refresh Token 機制
+- [ ] 單元測試覆蓋率達到 90%
+- [ ] GPS 即時追蹤功能（使用 Geolocation API）
+- [ ] 使用者頭像上傳功能
+
+### 中期目標（3-6 個月）
+- [ ] 社群互動增強（按讚、追蹤、私訊）
+- [ ] 排行榜系統（月度、年度、總榜）
+- [ ] 實體獎牌兌換流程與物流追蹤
+- [ ] PWA 支援（離線使用）
+- [ ] 多語言支援（中文、英文、日文）
+
+### 長期目標（6-12 個月）
+- [ ] 手機 App 版本（React Native）
+- [ ] Strava / Garmin 官方 API 整合
+- [ ] Apple Health / Google Fit 數據同步
+- [ ] 虛擬賽事直播功能
+- [ ] AI 訓練計畫生成器
+- [ ] 跑步社群配對系統
+
+---
+
+## 🤝 貢獻指南
+
+歡迎貢獻代碼、回報問題或提出新功能建議！
+
+### 開發流程
+1. Fork 本專案
+2. 創建功能分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 開啟 Pull Request
+
+### 代碼規範
+- **前端**：遵循 ESLint 配置
+- **後端**：遵循 PEP 8 規範
+- **提交訊息**：使用 Conventional Commits 格式
 
 ---
 
 ## 📝 授權
 
-MIT License
+MIT License - 詳見 [LICENSE](LICENSE) 文件
 
 ---
 
 ## 🙏 致謝
 
-- 櫻花圖片來源：Unsplash
-- 圖標庫：Lucide React
-- AI 技術：Google Gemini
+- **櫻花圖片**：[Unsplash](https://unsplash.com/)
+- **圖標庫**：[Lucide React](https://lucide.dev/)
+- **AI 技術**：[Google Gemini](https://deepmind.google/technologies/gemini/)
+- **框架支援**：React、FastAPI、Tailwind CSS
 
 ---
 
 ## 📧 聯絡方式
 
 如有問題或建議，歡迎聯繫：
-- Email: contact@fujisakurarun.com
-- GitHub Issues: [Project Issues](https://github.com/yourusername/fuji-sakura-run/issues)
-
-**「終點不會逃走，只有心會退縮」- 讓我們一起跑向富士山頂！** 🏃‍♂️🌸🗻
-- **賽事官網監測**：週期抓取賽事官網公告，若有新訊息則建立通知／推播，並在前端顯示標題與連結。
-- **打包清單提醒**：可手動建立或在賽前 (範例 3 天) 自動複製打包清單到 Todoist（或其他待辦服務）。
-- **連線檢查與錯誤回退**：前端會呼叫 n8n 連線檢查（若未連線，UI 會切換為模擬資料顯示）。
-
-### 🧩 前端整合（呼叫點與函式）
-- **元件**: [src/components/components/N8nIntegration.tsx](src/components/components/N8nIntegration.tsx#L1-L400)
-- **服務**: [src/services/n8nService.ts](src/services/n8nService.ts#L1-L200)
-- **前端可呼叫的主要函式**（在 `n8nService` 中）：
-  - `testN8nConnection()` — 檢查 n8n 服務是否可用
-  - `triggerExchangeRateCheck()` — 觸發匯率檢查
-  - `triggerWeatherCheck()` — 觸發天氣檢查
-  - `getLatestTrainingLogs()` — 取得最近訓練記錄
-  - `getEventNotifications()` — 取得賽事通知列表
-  - `triggerPackingListReminder(eventDate)` — 建立 / 觸發打包清單提醒
-
-### ⚙️ 在前端的使用情境
-- 使用者可在 UI 上手動按鈕觸發匯率或天氣檢查；
-- 訓練記錄與賽事通知可在元件中載入並顯示（含分頁或最近 N 筆）；
-- 當 n8n 工作流程執行時，可透過 Webhook 或 API 將結果回傳到後端或前端顯示。
-
-詳細的 n8n 工作流程與匯入步驟請參考： [.n8n/README_n8n_workflows.md](.n8n/README_n8n_workflows.md)
+- **專案維護者**：Kate
+- **GitHub Issues**：[專案 Issues 頁面](https://github.com/yourusername/fuji-sakura-run/issues)
+- **討論區**：[GitHub Discussions](https://github.com/yourusername/fuji-sakura-run/discussions)
 
 ---
 
-## 📁 專案結構
+<div align="center">
+  
+**「終點不會逃走，只有心會退縮」**
 
-```
-fuji_sakura_run/
-├── backend/                      # 後端 Python 專案
-│   ├── main.py                   # FastAPI 主程式
-│   ├── models.py                 # Pydantic 數據模型
+讓我們一起跑向富士山頂！🏃‍♂️🌸🗻
+
+[![Stars](https://img.shields.io/github/stars/yourusername/fuji-sakura-run?style=social)](https://github.com/yourusername/fuji-sakura-run)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
+</div>
 │   ├── database.py               # 數據庫操作
 │   ├── requirements.txt          # Python 依賴
 │   └── .env.example              # 環境變量示例
