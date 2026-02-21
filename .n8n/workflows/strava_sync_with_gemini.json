@@ -1,0 +1,159 @@
+{
+  "name": "Strava Sync to Notion with Gemini Encouragement",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "strava-webhook",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Strava Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "=https://www.strava.com/api/v3/activities/{{$json.object_id}}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "stravaOAuth2Api",
+        "options": {}
+      },
+      "name": "Get Activity Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const activity = items[0].json;\nconst distance_km = (activity.distance / 1000).toFixed(2);\nconst time_min = Math.floor(activity.moving_time / 60);\nconst pace_min_per_km = (activity.moving_time / 60 / distance_km).toFixed(2);\nconst hr = activity.average_heartrate || 'N/A';\n\nreturn [{\n  json: {\n    activityId: activity.id,\n    name: activity.name,\n    distance_km,\n    time_min,\n    pace: `${pace_min_per_km} min/km`,\n    heartRate: hr,\n    startDate: activity.start_date_local,\n    type: activity.type\n  }\n}];"
+      },
+      "name": "Extract Activity Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={{$env.GEMINI_API_KEY}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [{\n    \"parts\": [{\n      \"text\": \"根據以下跑步數據寫一句簡短鼓勵的話（30字內）：距離 {{$json.distance_km}} km，時間 {{$json.time_min}} 分鐘，配速 {{$json.pace}}，心率 {{$json.heartRate}} bpm。用溫暖鼓勵的語氣，提到富士山路跑目標。\"\n    }]\n  }]\n}",
+        "options": {}
+      },
+      "name": "Generate Encouragement (Gemini)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const prev = items[0].json;\nconst geminiResponse = items[0].json.candidates?.[0]?.content?.parts?.[0]?.text || '繼續加油，距離富士山完賽又近了一步！';\n\nreturn [{\n  json: {\n    ...prev,\n    encouragement: geminiResponse.trim()\n  }\n}];"
+      },
+      "name": "Merge Encouragement",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_GOOGLE_SHEET_ID"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "訓練記錄"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "日期": "={{$json.startDate}}",
+            "類型": "={{$json.type}}",
+            "距離(km)": "={{$json.distance_km}}",
+            "時間(分鐘)": "={{$json.time_min}}",
+            "配速": "={{$json.pace}}",
+            "心率": "={{$json.heartRate}}",
+            "鼓勵語": "={{$json.encouragement}}"
+          }
+        },
+        "options": {}
+      },
+      "name": "Append to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "create",
+        "databaseId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_NOTION_DATABASE_ID"
+        },
+        "title": "={{$json.name}}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "日期",
+              "dateValue": "={{$json.startDate}}"
+            },
+            {
+              "key": "距離",
+              "numberValue": "={{$json.distance_km}}"
+            },
+            {
+              "key": "配速",
+              "textValue": "={{$json.pace}}"
+            },
+            {
+              "key": "心率",
+              "textValue": "={{$json.heartRate}}"
+            },
+            {
+              "key": "鼓勵語",
+              "richTextValue": "={{$json.encouragement}}"
+            }
+          ]
+        }
+      },
+      "name": "Create Notion Page",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [1340, 500]
+    }
+  ],
+  "connections": {
+    "Strava Webhook": {
+      "main": [[{ "node": "Get Activity Details", "type": "main", "index": 0 }]]
+    },
+    "Get Activity Details": {
+      "main": [[{ "node": "Extract Activity Data", "type": "main", "index": 0 }]]
+    },
+    "Extract Activity Data": {
+      "main": [[{ "node": "Generate Encouragement (Gemini)", "type": "main", "index": 0 }]]
+    },
+    "Generate Encouragement (Gemini)": {
+      "main": [[{ "node": "Merge Encouragement", "type": "main", "index": 0 }]]
+    },
+    "Merge Encouragement": {
+      "main": [
+        [
+          { "node": "Append to Google Sheets", "type": "main", "index": 0 },
+          { "node": "Create Notion Page", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

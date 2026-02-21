@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>櫻色富士 | SAKURA PROJECT 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Allura&family=Noto+Serif+JP:wght@300;500;700&family=Noto+Sans+TC:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --sakura-pink: #fdf2f4;
+            --sakura-deep: #f472b6;
+            --fuji-blue: #1a365d;
+        }
+
+        body {
+            font-family: 'Noto Serif JP', serif;
+            background-color: var(--sakura-pink);
+            background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            color: #4a4a4a;
+        }
+
+        .font-script {
+            font-family: 'Allura', cursive;
+        }
+
+        .writing-vertical {
+            writing-mode: vertical-rl;
+        }
+
+        .japanese-stamp {
+            border: 2px solid #b91c1c;
+            color: #b91c1c;
+            padding: 4px 8px;
+            font-weight: bold;
+            display: inline-block;
+            transform: rotate(-5deg);
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg) translateX(0px);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(110vh) rotate(360deg) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        .animate-fall {
+            animation: fall linear infinite;
+        }
+
+        .animate-pulse-slow {
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+        }
+    </style>
+    <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
+    "@google/genai": "https://esm.sh/@google/genai"
+  }
+}
+</script>
+    <link rel="stylesheet" href="/index.css">
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+
+</html>

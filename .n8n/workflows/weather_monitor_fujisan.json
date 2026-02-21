@@ -1,0 +1,54 @@
+{
+  "name": "Weather Monitor - Mt Fuji (Fujikawaguchiko)",
+  "nodes": [
+    {
+      "parameters": {
+        "cronExpression": "0 6,18 * * *",
+        "cronTimeZone": "Asia/Tokyo"
+      },
+      "name": "Daily Morning/Evening Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [240, 260]
+    },
+    {
+      "parameters": {
+        "requestMethod": "GET",
+        "url": "=\"https://api.openweathermap.org/data/2.5/onecall?lat=35.5200&lon=138.7498&exclude=minutely&units=metric&appid=\" + $env.OPENWEATHERMAP_API_KEY",
+        "responseFormat": "json",
+        "jsonParameters": true
+      },
+      "name": "Get Weather",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [440, 260]
+    },
+    {
+      "parameters": {
+        "functionCode": "const daily = items[0].json.daily?.slice(0,7) || [];\nconst today = items[0].json.current || {};\nconst summary = `今天天氣：${today.weather?.[0]?.description || '無資料'}，溫度 ${today.temp?.day ?? 'N/A'}°C，風速 ${today.wind_speed ?? 'N/A'} m/s。\n未來7天重點：` + daily.map((d,i)=>`第${i+1}天 降雨機率 ${Math.round((d.pop||0)*100)}%，最低/最高 ${d.temp.min}/${d.temp.max}°C`).join('; ');\nreturn [{ json: { summary } }];"
+      },
+      "name": "Summarize Weather",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [660, 260]
+    },
+    {
+      "parameters": {
+        "toEmail": "your.email@example.com",
+        "subject": "富士山天氣報告 - {{ $now.format('YYYY-MM-DD') }}",
+        "text": "{{$json.summary}}"
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [880, 260]
+    }
+  ],
+  "connections": {
+    "Daily Morning/Evening Trigger": { "main": [[{ "node": "Get Weather", "type": "main", "index": 0 }]] },
+    "Get Weather": { "main": [[{ "node": "Summarize Weather", "type": "main", "index": 0 }]] },
+    "Summarize Weather": { "main": [[{ "node": "Send Email", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": {}
+}

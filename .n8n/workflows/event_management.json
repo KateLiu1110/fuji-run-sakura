@@ -1,0 +1,190 @@
+{
+  "name": "Event Management - Website Monitor & Packing List",
+  "nodes": [
+    {
+      "parameters": {
+        "cronExpression": "0 */6 * * *",
+        "cronTimeZone": "Asia/Tokyo"
+      },
+      "name": "Every 6 Hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [240, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://www.fujisan-marathon.jp/news",
+        "options": {}
+      },
+      "name": "Fetch Official Website",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [460, 200]
+    },
+    {
+      "parameters": {
+        "functionCode": "// 解析 HTML 取得最新消息標題與連結\nconst html = items[0].json.body || items[0].binary?.data?.toString() || '';\n\n// 簡易 regex 取得標題（實際應用建議用 HTML parser）\nconst titleRegex = /<h3[^>]*>([^<]+)<\\/h3>/g;\nconst linkRegex = /<a[^>]*href=\"([^\"]+)\"[^>]*>/g;\n\nconst titles = [];\nlet match;\nwhile ((match = titleRegex.exec(html)) !== null) {\n  titles.push(match[1].trim());\n}\n\nconst links = [];\nwhile ((match = linkRegex.exec(html)) !== null) {\n  links.push(match[1]);\n}\n\n// 取前 5 則\nconst news = titles.slice(0, 5).map((title, i) => ({\n  title,\n  url: links[i] || '#',\n  publishedDate: new Date().toISOString().split('T')[0]\n}));\n\nreturn news.map(item => ({ json: item }));"
+      },
+      "name": "Parse News",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [680, 200]
+    },
+    {
+      "parameters": {
+        "functionCode": "// 從 Static Data 或 Google Sheets 讀取上次已知的標題\nconst lastKnownTitles = $executionData?.lastNews || [];\nconst currentTitle = items[0].json.title;\n\n// 判斷是否為新標題\nconst isNew = !lastKnownTitles.includes(currentTitle);\n\nreturn [{\n  json: {\n    ...items[0].json,\n    isNew\n  }\n}];"
+      },
+      "name": "Check if New",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.isNew}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Is New?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "chatId": "@your_telegram_chat_id",
+        "text": "=🔔 富士路跑賽事有新公告：\n\n{{$json.title}}\n\n連結：{{$json.url}}"
+      },
+      "name": "Send Telegram Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1340, 200]
+    },
+    {
+      "parameters": {
+        "cronExpression": "0 9 * * *",
+        "cronTimeZone": "Asia/Tokyo"
+      },
+      "name": "Daily Check Calendar",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [240, 500]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendarId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "primary"
+        },
+        "options": {
+          "timeMin": "={{$now.plus({days: 3}).toISO()}}",
+          "timeMax": "={{$now.plus({days: 4}).toISO()}}",
+          "query": "富士路跑"
+        }
+      },
+      "name": "Get Calendar Events",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1,
+      "position": [460, 500]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$json.length}}",
+              "operation": "larger",
+              "value2": 0
+            }
+          ]
+        }
+      },
+      "name": "Has Event in 3 Days?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [680, 500]
+    },
+    {
+      "parameters": {
+        "functionCode": "// 打包清單項目\nconst packingList = [\n  '護照',\n  '號碼布',\n  '晶片（計時用）',\n  '能量膠 x 3-5 包',\n  '跑鞋（已磨合）',\n  '運動服裝',\n  '防曬乳',\n  '太陽眼鏡',\n  '充電器與行動電源',\n  '旅行藥包（止痛藥、肌肉貼布）',\n  '輕便外套',\n  '換洗衣物'\n];\n\nreturn packingList.map(item => ({\n  json: { task: item }\n}));"
+      },
+      "name": "Generate Packing List",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [900, 500]
+    },
+    {
+      "parameters": {
+        "resource": "task",
+        "operation": "create",
+        "project": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_TODOIST_PROJECT_ID"
+        },
+        "content": "={{$json.task}}",
+        "options": {
+          "dueDate": "={{$now.plus({days: 3}).toISODate()}}"
+        }
+      },
+      "name": "Add to Todoist",
+      "type": "n8n-nodes-base.todoist",
+      "typeVersion": 1,
+      "position": [1120, 500]
+    },
+    {
+      "parameters": {
+        "chatId": "@your_telegram_chat_id",
+        "text": "提醒：距離富士路跑開始還有 3 天，已將打包清單加入你的 Todoist。記得檢查護照、號碼布、晶片等重要物品！🎒"
+      },
+      "name": "Send Packing Reminder",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1340, 500]
+    }
+  ],
+  "connections": {
+    "Every 6 Hours": {
+      "main": [[{ "node": "Fetch Official Website", "type": "main", "index": 0 }]]
+    },
+    "Fetch Official Website": {
+      "main": [[{ "node": "Parse News", "type": "main", "index": 0 }]]
+    },
+    "Parse News": {
+      "main": [[{ "node": "Check if New", "type": "main", "index": 0 }]]
+    },
+    "Check if New": {
+      "main": [[{ "node": "Is New?", "type": "main", "index": 0 }]]
+    },
+    "Is New?": {
+      "main": [[{ "node": "Send Telegram Notification", "type": "main", "index": 0 }], []]
+    },
+    "Daily Check Calendar": {
+      "main": [[{ "node": "Get Calendar Events", "type": "main", "index": 0 }]]
+    },
+    "Get Calendar Events": {
+      "main": [[{ "node": "Has Event in 3 Days?", "type": "main", "index": 0 }]]
+    },
+    "Has Event in 3 Days?": {
+      "main": [
+        [{ "node": "Generate Packing List", "type": "main", "index": 0 }],
+        []
+      ]
+    },
+    "Generate Packing List": {
+      "main": [[{ "node": "Add to Todoist", "type": "main", "index": 0 }]]
+    },
+    "Add to Todoist": {
+      "main": [[{ "node": "Send Packing Reminder", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {}
+}
