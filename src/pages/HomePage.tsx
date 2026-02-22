@@ -14,6 +14,7 @@ import {
   Download,
 } from 'lucide-react';
 import SakuraFalling from '../components/SakuraFalling';
+import FujiMountainReward from '@/assets/images/FujiMountainReward.jpg'
 
 const HomePage: React.FC = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -130,11 +131,9 @@ const HomePage: React.FC = () => {
           <div className="hidden lg:block relative">
             <div className="bg-white p-4 rounded-3xl shadow-2xl rotate-3 transition-transform hover:rotate-0">
               <div className="aspect-square bg-slate-100 rounded-2xl overflow-hidden relative">
-                <img 
-                  src="https://images.unsplash.com/photo-1599050751795-6cdaafbc2319?auto=format&fit=crop&w=800&q=80" 
+                <img src={FujiMountainReward}
                   alt="Mt. Fuji Commemorative Medal" 
-                  className="w-full h-full object-cover" 
-                />
+                  className="w-full h-full object-cover" />
               </div>
               <p className="mt-4 text-center font-medium text-slate-500">2024 櫻色富士限定 · 完賽紀念獎牌</p>
             </div>
@@ -168,22 +167,19 @@ const HomePage: React.FC = () => {
           </div>
 
           {/* Poetic Headline */}
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-slate-800 mb-8 leading-tight tracking-wide">
-            春風拂過步道，<br className="md:hidden" />
-            帶來了新的挑戰與故事。
+          <h2 className="whitespace-nowrap text-4xl md:text-5xl font-serif font-bold text-slate-800 mb-8 leading-tight tracking-wide">
+            春風拂過步道，帶來了新的挑戰與故事。
           </h2>
 
           {/* Editorial Subtext */}
           <p className="text-slate-500 text-sm md:text-base leading-loose max-w-2xl mx-auto mb-20 font-light tracking-widest">
-            atré 櫻色富士計畫為您準備了專業的知識與社群。<br className="hidden md:block" />
-            無論是自主訓練、還是尋找志同道合的跑友，<br className="hidden md:block" />
-            讓我們在這個美好的季節一起揮汗成長。
+            無論是自主訓練、還是尋找志同道合的跑友，讓我們在這個美好的季節一起揮汗成長。
           </p>
 
           {/* Steps Grid - Styled more subtly */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-left">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-left cursor-pointer ">
             {steps.map((step, idx) => (
-              <div key={idx} className="relative group">
+              <div key={idx} className="relative group p-6 hover:bg-slate-50">
                 <div className="text-xs font-black text-pink-400 mb-4 tracking-[0.2em] uppercase">Step 0{idx + 1}</div>
                 <h3 className="text-lg font-bold mb-3 text-slate-800">{step.title}</h3>
                 <p className="text-xs text-slate-400 leading-relaxed font-medium">{step.desc}</p>
