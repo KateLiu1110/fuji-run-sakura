@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import SakuraFalling from '../components/SakuraFalling';
 import FujiMountainReward from '@/assets/images/FujiMountainReward.jpg'
+import BoardSection from '@/components/BoardSection'
 
 const HomePage: React.FC = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -272,7 +273,8 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* 5. 留言板 (Board) */}
-      <section id="board" className="py-24 bg-white">
+      <BoardSection/>
+      {/* <section id="board" className="py-24 bg-white">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold mb-2">跑者留言板</h2>
@@ -309,7 +311,7 @@ const HomePage: React.FC = () => {
             <button className="bg-slate-900 text-white px-8 py-3 rounded-full font-bold">送出鼓勵</button>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Footer */}
       <footer className="bg-slate-50 py-12 border-t border-slate-200">

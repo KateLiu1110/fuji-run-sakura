@@ -3,6 +3,7 @@ import { Home, CheckCircle } from 'lucide-react';
 import HomePage from './pages/HomePage';
 import SelfDisciplinePage from './pages/SelfDisciplinePage';
 import LoginPage from './pages/LoginPage';
+import { CommunityProvider } from './store/CommunityContext';
 
 const App: React.FC = () => {
   const [view, setView] = useState<'home' | 'discipline'>('home');
@@ -52,75 +53,77 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 relative">
-      {/* 固定導航欄 */}
-      <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50 px-4 md:px-8 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2 cursor-pointer group" onClick={() => handleViewChange('home')}>
-          <div className="bg-pink-500 p-2 rounded-full text-white transition-transform group-hover:scale-110">
-            <Home size={20} />
-          </div>
-          <span className="font-bold text-lg hidden sm:inline tracking-wider">櫻色富士</span>
-        </div>
-
-        <div className="flex items-center gap-1 md:gap-6 text-sm font-medium">
-          <button
-            onClick={() => handleViewChange('home')}
-            className={`flex items-center gap-1 py-1 px-2 rounded-md transition-colors ${
-              view === 'home' ? 'text-pink-600 bg-pink-50' : 'text-slate-600 hover:text-pink-500'
-            }`}
-          >
-            <Home size={16}/>
-            <span className="hidden md:inline">首頁</span>
-          </button>
-          
-          <button
-            onClick={() => handleViewChange('discipline')}
-            className={`flex items-center gap-1 py-1 px-2 rounded-md transition-colors ${
-              view === 'discipline' ? 'text-pink-600 bg-pink-50' : 'text-slate-600 hover:text-pink-500'
-            }`}
-          >
-            <CheckCircle size={16}/>
-            <span className="hidden md:inline">自律表</span>
-          </button>
-        </div>
-      </nav>
-
-      {/* Logout Confirmation Popup */}
-      {showLogoutConfirm && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[300] flex items-center justify-center p-6">
-          <div className="bg-white rounded-[32px] p-10 max-w-sm w-full shadow-2xl text-center animate-in zoom-in duration-300">
-            <div className="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-6 text-pink-500">
-              <Home size={40} />
+    <CommunityProvider>
+      <div className="min-h-screen bg-slate-50 font-sans text-slate-800 relative">
+        {/* 固定導航欄 */}
+        <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50 px-4 md:px-8 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2 cursor-pointer group" onClick={() => handleViewChange('home')}>
+            <div className="bg-pink-500 p-2 rounded-full text-white transition-transform group-hover:scale-110">
+              <Home size={20} />
             </div>
-            <h3 className="text-2xl font-serif font-black mb-4">即將離開頁面</h3>
-            <p className="text-gray-500 mb-8">您是否要同時登出跑者帳號？<br/>(您的紀錄將會被保留)</p>
-            <div className="space-y-3">
-              <button 
-                onClick={confirmLogout}
-                className="w-full py-4 bg-pink-500 text-white rounded-2xl font-black text-lg shadow-lg hover:bg-pink-600 transition-all"
-              >
-                登出並離開
-              </button>
-              <button 
-                onClick={cancelLogout}
-                className="w-full py-4 bg-gray-100 text-gray-600 rounded-2xl font-black text-lg hover:bg-gray-200 transition-all"
-              >
-                保留登入並離開
-              </button>
+            <span className="font-bold text-lg hidden sm:inline tracking-wider">櫻色富士</span>
+          </div>
+
+          <div className="flex items-center gap-1 md:gap-6 text-sm font-medium">
+            <button
+              onClick={() => handleViewChange('home')}
+              className={`flex items-center gap-1 py-1 px-2 rounded-md transition-colors ${
+                view === 'home' ? 'text-pink-600 bg-pink-50' : 'text-slate-600 hover:text-pink-500'
+              }`}
+            >
+              <Home size={16}/>
+              <span className="hidden md:inline">首頁</span>
+            </button>
+            
+            <button
+              onClick={() => handleViewChange('discipline')}
+              className={`flex items-center gap-1 py-1 px-2 rounded-md transition-colors ${
+                view === 'discipline' ? 'text-pink-600 bg-pink-50' : 'text-slate-600 hover:text-pink-500'
+              }`}
+            >
+              <CheckCircle size={16}/>
+              <span className="hidden md:inline">自律表</span>
+            </button>
+          </div>
+        </nav>
+
+        {/* Logout Confirmation Popup */}
+        {showLogoutConfirm && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[300] flex items-center justify-center p-6">
+            <div className="bg-white rounded-[32px] p-10 max-w-sm w-full shadow-2xl text-center animate-in zoom-in duration-300">
+              <div className="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-6 text-pink-500">
+                <Home size={40} />
+              </div>
+              <h3 className="text-2xl font-serif font-black mb-4">即將離開頁面</h3>
+              <p className="text-gray-500 mb-8">您是否要同時登出跑者帳號？<br/>(您的紀錄將會被保留)</p>
+              <div className="space-y-3">
+                <button 
+                  onClick={confirmLogout}
+                  className="w-full py-4 bg-pink-500 text-white rounded-2xl font-black text-lg shadow-lg hover:bg-pink-600 transition-all"
+                >
+                  登出並離開
+                </button>
+                <button 
+                  onClick={cancelLogout}
+                  className="w-full py-4 bg-gray-100 text-gray-600 rounded-2xl font-black text-lg hover:bg-gray-200 transition-all"
+                >
+                  保留登入並離開
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Main Content */}
-      <div className="pt-16">
-        {view === 'home' ? (
-          <HomePage />
-        ) : (
-          <SelfDisciplinePage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         )}
+
+        {/* Main Content */}
+        <div className="pt-16">
+          {view === 'home' ? (
+            <HomePage />
+          ) : (
+            <SelfDisciplinePage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+          )}
+        </div>
       </div>
-    </div>
+    </CommunityProvider>
   );
 };
 
