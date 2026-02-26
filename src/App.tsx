@@ -64,24 +64,28 @@ const App: React.FC = () => {
             <span className="font-bold text-lg hidden sm:inline tracking-wider">櫻色富士</span>
           </div>
 
-          <div className="flex items-center gap-1 md:gap-6 text-sm font-medium">
+          <div className="flex items-center gap-2 text-sm font-medium">
             <button
               onClick={() => handleViewChange('home')}
-              className={`flex items-center gap-1 py-1 px-2 rounded-md transition-colors ${
-                view === 'home' ? 'text-pink-600 bg-pink-50' : 'text-slate-600 hover:text-pink-500'
+              className={`flex items-center gap-2 py-2 px-4 rounded-lg transition-all font-bold ${
+                view === 'home' 
+                  ? 'text-white bg-pink-500 shadow-lg shadow-pink-200' 
+                  : 'text-slate-600 hover:text-pink-500 hover:bg-pink-50'
               }`}
             >
-              <Home size={16}/>
+              <Home size={18}/>
               <span className="hidden md:inline">首頁</span>
             </button>
             
             <button
               onClick={() => handleViewChange('discipline')}
-              className={`flex items-center gap-1 py-1 px-2 rounded-md transition-colors ${
-                view === 'discipline' ? 'text-pink-600 bg-pink-50' : 'text-slate-600 hover:text-pink-500'
+              className={`flex items-center gap-2 py-2 px-4 rounded-lg transition-all font-bold ${
+                view === 'discipline' 
+                  ? 'text-white bg-pink-500 shadow-lg shadow-pink-200' 
+                  : 'text-slate-600 hover:text-pink-500 hover:bg-pink-50'
               }`}
             >
-              <CheckCircle size={16}/>
+              <CheckCircle size={18}/>
               <span className="hidden md:inline">自律表</span>
             </button>
           </div>
@@ -117,7 +121,7 @@ const App: React.FC = () => {
         {/* Main Content */}
         <div className="pt-16">
           {view === 'home' ? (
-            <HomePage />
+            <HomePage onNavigateToDiscipline={() => handleViewChange('discipline')} />
           ) : (
             <SelfDisciplinePage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
           )}

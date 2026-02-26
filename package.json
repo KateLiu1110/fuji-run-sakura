@@ -5,8 +5,9 @@
   "type": "module",
   "description": "富士櫻花路跑活動網站",
   "dependencies": {
-    "@google/generative-ai": "^0.24.1",
     "axios": "^1.6.0",
+    "echarts": "^5.6.0",
+    "echarts-for-react": "^3.0.6",
     "lucide-react": "^0.563.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

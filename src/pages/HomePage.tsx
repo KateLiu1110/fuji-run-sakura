@@ -11,15 +11,26 @@ import {
   Activity, 
   Wind, 
   Brain,
-  Download,
+  Navigation,
+  X,
+  ExternalLink,
+  ChevronUp,
+  Award
 } from 'lucide-react';
 import SakuraFalling from '../components/SakuraFalling';
 import FujiMountainReward from '@/assets/images/FujiMountainReward.jpg'
 import BoardSection from '@/components/BoardSection'
 
-const HomePage: React.FC = () => {
+interface HomePageProps {
+  onNavigateToDiscipline?: () => void;
+}
+
+const HomePage: React.FC<HomePageProps> = ({ onNavigateToDiscipline }) => {
   const [activeSection, setActiveSection] = useState('home');
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [showMapModal, setShowMapModal] = useState(false);
+  const [selectedRoute, setSelectedRoute] = useState<{name: string, location?: string} | null>(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   // 監測滾動進度與當前區塊
   useEffect(() => {
@@ -27,6 +38,9 @@ const HomePage: React.FC = () => {
       const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
       const currentProgress = (window.pageYOffset / totalScroll) * 100;
       setScrollProgress(currentProgress);
+      
+      // 顯示/隱藏返回頂部按鈕
+      setShowScrollTop(window.pageYOffset > 400);
 
       const sections = ['home', 'event', 'routes', 'knowledge', 'board'];
       const current = sections.find(id => {
@@ -41,6 +55,7 @@ const HomePage: React.FC = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
+    handleScroll(); // 初始化检查
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -52,6 +67,18 @@ const HomePage: React.FC = () => {
         behavior: 'smooth'
       });
     }
+  };
+  
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+  
+  const openGPSMap = (route: {name: string, location?: string}) => {
+    setSelectedRoute(route);
+    setShowMapModal(true);
   };
 
   // 模擬數據
@@ -78,6 +105,127 @@ const HomePage: React.FC = () => {
         className="fixed top-0 left-0 h-1 bg-pink-500 z-[100] transition-all duration-300" 
         style={{ width: `${scrollProgress}%` }}
       />
+      
+      {/* Header 導航欄 */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => scrollTo('home')}>
+            <div className="bg-pink-500 p-2 rounded-full text-white">
+              <Home size={20} />
+            </div>
+            <span className="font-black text-xl tracking-wider text-slate-800">櫻色富士</span>
+          </div>
+          
+          <nav className="hidden md:flex items-center gap-2">
+            <button 
+              onClick={() => scrollTo('event')} 
+              className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                activeSection === 'event' 
+                  ? 'bg-pink-500 text-white shadow-lg shadow-pink-200' 
+                  : 'text-slate-600 hover:text-pink-500 hover:bg-pink-50'
+              }`}
+            >
+              報名流程
+            </button>
+            <button 
+              onClick={() => scrollTo('routes')} 
+              className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                activeSection === 'routes' 
+                  ? 'bg-pink-500 text-white shadow-lg shadow-pink-200' 
+                  : 'text-slate-600 hover:text-pink-500 hover:bg-pink-50'
+              }`}
+            >
+              追櫻路線 & 練跑基地
+            </button>
+            <button 
+              onClick={() => scrollTo('board')} 
+              className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                activeSection === 'board' 
+                  ? 'bg-pink-500 text-white shadow-lg shadow-pink-200' 
+                  : 'text-slate-600 hover:text-pink-500 hover:bg-pink-50'
+              }`}
+            >
+              留言區
+            </button>
+            <button 
+              onClick={onNavigateToDiscipline}
+              className="px-4 py-2 rounded-lg font-bold transition-all text-slate-600 hover:text-white hover:bg-gradient-to-r hover:from-pink-500 hover:to-pink-600 hover:shadow-lg hover:shadow-pink-200 flex items-center gap-2"
+            >
+              <Award size={18} />
+              自律表
+            </button>
+          </nav>
+        </div>
+      </header>
+      
+      {/* 返回頂部櫻花按鈕 */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 w-14 h-14 bg-pink-500 hover:bg-pink-600 text-white rounded-full shadow-2xl flex items-center justify-center transition-all transform hover:scale-110 active:scale-95 animate-bounce"
+          title="返回頂部"
+        >
+          <div className="relative">
+            <ChevronUp size={28} strokeWidth={3} />
+            <div className="absolute -top-1 -right-1 text-xs">🌸</div>
+          </div>
+        </button>
+      )}
+      
+      {/* GPS地图Modal */}
+      {showMapModal && selectedRoute && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowMapModal(false)}>
+          <div className="bg-white rounded-3xl overflow-hidden max-w-4xl w-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-gradient-to-r from-pink-500 to-pink-600 p-6 flex justify-between items-center">
+              <div>
+                <h3 className="text-2xl font-black text-white mb-1">{selectedRoute.name}</h3>
+                {selectedRoute.location && (
+                  <p className="text-pink-100 text-sm flex items-center gap-2">
+                    <MapPin size={16} /> {selectedRoute.location}
+                  </p>
+                )}
+              </div>
+              <button
+                onClick={() => setShowMapModal(false)}
+                className="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all"
+              >
+                <X size={24} className="text-white" />
+              </button>
+            </div>
+            
+            <div className="p-6">
+              <div className="aspect-video bg-slate-100 rounded-2xl overflow-hidden mb-4">
+                <iframe
+                  src={`https://www.google.com/maps/embed/v1/search?q=${encodeURIComponent(selectedRoute.name + ' ' + (selectedRoute.location || '台湾'))}&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8`}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
+              
+              <div className="flex gap-3">
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedRoute.name + ' ' + (selectedRoute.location || '台湾'))}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+                >
+                  <ExternalLink size={20} /> 在 Google 地圖中打開
+                </a>
+                <button
+                  onClick={() => setShowMapModal(false)}
+                  className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition-all"
+                >
+                  關閉
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 1. Hero Block */}
       <section id="home" className="relative h-[90vh] flex items-center justify-center overflow-hidden pt-16">
@@ -221,8 +369,11 @@ const HomePage: React.FC = () => {
                     <span className="flex items-center gap-1"><Activity size={14}/> {route.dist}</span>
                     <span className="flex items-center gap-1"><Wind size={14}/> {route.elevation}</span>
                   </div>
-                  <button className="w-full flex items-center justify-center gap-2 py-2 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium">
-                    <Download size={14}/> 下載 GPX
+                  <button 
+                    onClick={() => openGPSMap({name: route.name})}
+                    className="w-full flex items-center justify-center gap-2 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-lg transition-colors text-sm font-bold shadow-lg shadow-pink-100 active:scale-95"
+                  >
+                    <Navigation size={14}/> GPS 路线
                   </button>
                 </div>
               </div>
