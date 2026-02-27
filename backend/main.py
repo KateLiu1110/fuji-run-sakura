@@ -44,9 +44,12 @@ security = HTTPBearer()
 mock_routes = [
     {
         "id": "1",
-        "name": "武陵農場櫻花環線",
+        "name": "武陵農場櫻花跑",
         "location": "台中市和平區",
-        "distance": 5.2,
+        "distance": "10km",
+        "elevation": "300m",
+        "type": "櫻花季限定",
+        "color": "bg-pink-100 text-pink-700",
         "difficulty": "easy",
         "sakuraLevel": 5,
         "description": "紅粉佳人盛開，最美的櫻花路線",
@@ -54,23 +57,70 @@ mock_routes = [
     },
     {
         "id": "2",
-        "name": "淡水天元宮步道",
+        "name": "淡水河濱美景",
         "location": "新北市淡水區",
-        "distance": 3.8,
+        "distance": "15km",
+        "elevation": "10m",
+        "type": "熱門路線",
+        "color": "bg-blue-100 text-blue-700",
         "difficulty": "easy",
-        "sakuraLevel": 4,
-        "description": "吉野櫻與天元宮的絕美組合",
-        "bestSeason": "3-4月"
+        "sakuraLevel": 3,
+        "description": "河濱步道平坦舒適，適合初學者",
+        "bestSeason": "全年"
     },
     {
         "id": "3",
-        "name": "陽明山櫻花步道",
+        "name": "陽明山越野徑",
         "location": "台北市北投區",
-        "distance": 8.5,
-        "difficulty": "medium",
+        "distance": "8km",
+        "elevation": "450m",
+        "type": "體能挑戰",
+        "color": "bg-green-100 text-green-700",
+        "difficulty": "hard",
         "sakuraLevel": 4,
-        "description": "山櫻花與八重櫻的夢幻組合",
+        "description": "山櫻花與八重櫻的夢幻組合，具挑戰性",
         "bestSeason": "2-3月"
+    },
+    {
+        "id": "4",
+        "name": "阿里山雲端路跑",
+        "location": "嘉義縣阿里山鄉",
+        "distance": "21km",
+        "elevation": "600m",
+        "type": "專業推薦",
+        "color": "bg-orange-100 text-orange-700",
+        "difficulty": "hard",
+        "sakuraLevel": 5,
+        "description": "高海拔櫻花林，專業跑者的挑戰",
+        "bestSeason": "3-4月"
+    }
+]
+
+# Mock registration steps data
+mock_registration_steps = [
+    {
+        "id": "1",
+        "step": 1,
+        "title": "註冊帳號",
+        "desc": "建立您的跑者專屬檔案"
+    },
+    {
+        "id": "2",
+        "step": 2,
+        "title": "上傳數據",
+        "desc": "串聯 Strava 或 Garmin GPS"
+    },
+    {
+        "id": "3",
+        "step": 3,
+        "title": "線上報名",
+        "desc": "選擇挑戰組別 (10k/半馬/全馬)"
+    },
+    {
+        "id": "4",
+        "step": 4,
+        "title": "解鎖榮耀",
+        "desc": "累積里程領取實體金牌"
     }
 ]
 
@@ -189,19 +239,44 @@ async def add_comment(comment_data: CommentCreate):
 
 # ========== 路線 API ==========
 
-@app.get("/api/routes", response_model=List[SakuraRoute])
+@app.get("/api/routes")
 async def get_routes():
     """獲取所有櫻花路線"""
+    # 返回簡化格式以匹配前端需求
+    simplified_routes = [
+        {
+            "name": route["name"],
+            "dist": route["distance"],
+            "elevation": route["elevation"],
+            "type": route["type"],
+            "color": route["color"]
+        }
+        for route in mock_routes
+    ]
+    return simplified_routes
+
+
+@app.get("/api/routes/full")
+async def get_routes_full():
+    """獲取所有櫻花路線的完整資訊"""
     return mock_routes
 
 
-@app.get("/api/routes/{route_id}", response_model=SakuraRoute)
+@app.get("/api/routes/{route_id}")
 async def get_route(route_id: str):
     """獲取特定路線詳情"""
     route = next((r for r in mock_routes if r["id"] == route_id), None)
     if not route:
         raise HTTPException(status_code=404, detail="Route not found")
     return route
+
+
+# ========== 報名流程 API ==========
+
+@app.get("/api/registration-steps")
+async def get_registration_steps():
+    """獲取報名流程步驟"""
+    return mock_registration_steps
 
 
 # ========== 統計 API ==========

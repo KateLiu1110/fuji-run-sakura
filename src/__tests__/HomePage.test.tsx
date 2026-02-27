@@ -37,7 +37,7 @@ describe('HomePage Component', () => {
 
   it('renders footer', () => {
     render(<HomePage />);
-    expect(screen.getByText(/© 2024 櫻色富士線上路跑/i)).toBeInTheDocument();
+    expect(screen.getByText(/© 2026 櫻色富士線上路跑/i)).toBeInTheDocument();
   });
 
   it('displays correct number of registered participants', () => {

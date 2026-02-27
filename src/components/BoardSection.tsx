@@ -35,8 +35,9 @@ const BoardSection: React.FC = () => {
   };
 
   return (
-    <section id="board" className="py-24 bg-white">
-      <div className="max-w-4xl mx-auto px-6">
+    <section id="board" className="h-screen overflow-y-auto bg-white snap-start">
+      <div className="py-24 min-h-full">
+        <div className="max-w-4xl mx-auto px-6">
         
         {/* 標題區 */}
         <div className="text-center mb-16">
@@ -107,6 +108,7 @@ const BoardSection: React.FC = () => {
           </div>
         </form>
 
+        </div>
       </div>
     </section>
   );

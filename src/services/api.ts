@@ -79,6 +79,23 @@ export interface SakuraRoute {
   bestSeason: string;
 }
 
+// 简化的路线类型（用于首页显示）
+export interface SimpleRoute {
+  name: string;
+  dist: string;
+  elevation: string;
+  type: string;
+  color: string;
+}
+
+// 注册步骤类型
+export interface RegistrationStep {
+  id?: string;
+  step?: number;
+  title: string;
+  desc: string;
+}
+
 // 用户统计类型
 export interface UserStats {
   totalDistance: number;
@@ -206,10 +223,17 @@ export const commentApi = {
  */
 export const routeApi = {
   /**
-   * 獲取所有櫻花路線
+   * 獲取所有櫻花路線（簡化格式）
    */
-  getAll: async (): Promise<ApiResponse<SakuraRoute[]>> => {
-    return fetchApi<SakuraRoute[]>('/routes');
+  getAll: async (): Promise<ApiResponse<SimpleRoute[]>> => {
+    return fetchApi<SimpleRoute[]>('/routes');
+  },
+
+  /**
+   * 獲取所有櫻花路線（完整格式）
+   */
+  getAllFull: async (): Promise<ApiResponse<SakuraRoute[]>> => {
+    return fetchApi<SakuraRoute[]>('/routes/full');
   },
 
   /**
@@ -217,6 +241,18 @@ export const routeApi = {
    */
   getById: async (routeId: string): Promise<ApiResponse<SakuraRoute>> => {
     return fetchApi<SakuraRoute>(`/routes/${routeId}`);
+  },
+};
+
+/**
+ * 報名流程 API
+ */
+export const registrationApi = {
+  /**
+   * 獲取報名流程步驟
+   */
+  getSteps: async (): Promise<ApiResponse<RegistrationStep[]>> => {
+    return fetchApi<RegistrationStep[]>('/registration-steps');
   },
 };
 

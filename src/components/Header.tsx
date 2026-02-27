@@ -36,7 +36,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
 
   return (
     <header className={`fixed top-0 w-full z-[100] transition-all duration-500 ${
-      isScrolled || activeTab === 'dashboard' ? 'bg-white/80 backdrop-blur-md shadow-sm py-4' : 'py-8 bg-transparent'
+      isScrolled || activeTab === 'dashboard' ? 'bg-white/80 backdrop-blur-md py-4' : 'py-8 bg-transparent'
     }`}>
       <div className="container mx-auto px-6 flex justify-between items-center">
         {/* Logo */}
