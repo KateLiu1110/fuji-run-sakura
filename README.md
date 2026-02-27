@@ -1,7 +1,7 @@
-# 🌸 富士樱花路跑 Fuji Sakura Run
+# 🌸 富士櫻花路跑 Fuji Sakura Run
 
 <div align="center">
-  <img src="https://images.unsplash.com/photo-1522383225653-ed111181a951?q=80&w=2076&auto=format&fit=crop" alt="Sakura" width="100%" height="300" style="object-fit: cover; border-radius: 10px;"/>
+  <img src="https://images.unsplash.com/photo-1522383225653-ed111181a951?q=80&w=2076&auto=format&fit=crop" alt="Sakura" width="100%" style="object-fit: cover; border-radius: 10px;"/>
   
   <h3>「終點不會逃走，只有心會退縮」</h3>
   <p>專為櫻花季打造的線上路跑活動平台</p>
@@ -14,412 +14,327 @@
 - [專案簡介](#專案簡介)
 - [功能特色](#功能特色)
 - [技術架構](#技術架構)
-- [UI 展示](#ui-展示)
 - [專案結構](#專案結構)
 - [安裝與執行](#安裝與執行)
-- [n8n 自動化功能](#n8n-自動化功能)
 - [測試](#測試)
 
 ---
 
 ## 🎯 專案簡介
 
-**富士櫻花路跑**是一個結合櫻花季節與跑步運動的線上活動平台。此專案採用**完整前後端分離架構**，提供用戶追蹤跑步記錄、探索櫻花路線、參與社群互動等功能。
+**富士櫻花路跑**是一個結合櫻花季節與跑步運動的線上活動平台。此專案採用**完整前後端分離架構**，提供用戶訓練計畫、追蹤跑步記錄、數據分析等功能。
 
 ### 主要目標
-- 🏃 記錄和追蹤個人跑步數據
-- 🗺️ 發掘台灣各地的櫻花路線
-- 👥 建立跑步愛好者社群
-- 📊 提供數據可視化與統計分析
-- 🎖️ 激勵系統（積分、徽章、打卡）
-- 🤖 自動化數據同步與管理（n8n)
+- 🏃 制定個人化訓練計畫
+- 📊 記錄和追蹤跑步數據
+- 🗺️ 推薦適合的練跑路線
+- 💪 倒數計時激勵挑戰
+- 📈 提供數據可視化與統計分析
 
 ---
 
 ## ✨ 功能特色
 
-### 🏠 首页功能
-- **Hero 区块**：展示赛事资讯与奖牌介绍
-- **Header 导航栏**：
-  - 快速跳转至报名流程区块
-  - 追樱路线 & 练跑基地导航
-  - 留言区连结
-  - 响应式设计，支持移动设备
-- **报名流程**：清晰的四步骤报名指引
-- **知识专区**：跑步训练指南、健康知识
-- **路线地图**：
-  - 台湾各地樱花路线推荐
-  - GPS 路线查看功能
-  - Google 地图整合，点击查看详细位置
-  - 互动式地图 Modal
-- **社群留言板**：跑友分享与互动
-- **樱花返回顶部按钮**：
-  - 固定在页面右下角
-  - 带有樱花图标装饰
-  - 平滑滚动动画
+### 🏠 首頁功能
+- **Hero 區塊**：展示賽事資訊與獎牌介紹
+- **Header 導航列**：
+  - 快速跳轉至報名流程區塊
+  - 追櫻路線 & 練跑基地導航
+  - 留言區連結
+  - 響應式設計，支援行動裝置
+- **報名流程**：清晰的四步驟報名指引
+- **知識專區**：跑步訓練指南、健康知識
+- **路線地圖**：
+  - 台灣各地櫻花路線推薦
+  - GPS 路線查看功能
+  - Google 地圖整合，點擊查看詳細位置
+  - 互動式地圖 Modal
+- **社群留言板**：跑友分享與互動
+- **櫻花返回頂部按鈕**：
+  - 固定在頁面右下角
+  - 帶有櫻花圖標裝飾
+  - 平滑滾動動畫
 
-### 👤 个人专区 (自律表 Dashboard)
+### 👤 個人專區（自律表 Dashboard）
 
-#### 登入体验
-- **登入弹窗**：进入即显示精美的登入界面
-- **报名确认弹窗**：登入後自动显示
-  - 显示已报名的赛事资讯
-  - 比赛日期：2026/03/14 - 03/19
-  - 半马富士山路跑确认
-
-#### 第一个标签：跑步路线
-- **地区选择**：
+#### 登入體驗
+- **登入彈窗**：進入即顯示精美的登入介面
+- **報名組別選擇彈窗**：登入後選擇挑戰組別
+  - 50km（大獎牌收藏組）- 每天平均 5 公里
+  - 25km（經典挑戰組）- 每天平均 2.5 公里
+  - 10km（輕鬆跑組）- 每天平均 1 公里
+- **地區選擇**：設定居住地區，系統推薦適合的練跑路線
   - 北部（台北市、新北市）
-  - 中部（台中市、彰化县）
+  - 中部（台中市、彰化縣）
   - 南部（台南市、高雄市）
-- **城市筛选**：按地区展示不同城市
-- **路线卡片**：
-  - 半透明设计，显示路线名称和预估公里数
-  - 点击选择後卡片高亮显示
-  - 支持多选路线
-  - 精美的图片展示
-- **流程控制**：
-  - 必须先选择路线才能进入其他标签
-  - 未选择路线时其他标签为 disabled 状态
-  - 点击「下一步」按钮确认选择
 
-#### 第二个标签：记录跑步时光
-- **GPS 追踪功能**：
-  - Start 按钮启动 GPS 追踪
-  - 实时显示追踪时间
-  - 停止後自动记录跑步数据
-- **TATTA APP 连结**：提示可连接外部应用
-- **我的路跑统计**：
-  - 累积路跑里程
-  - 总运动时数
-  - 训练次数统计
-- **今日打卡系统**：
-  - 显示当前日期
-  - 每日打卡按钮
-  - 打卡後按钮变色显示已完成
-- **智慧路跑管家**：
-  - n8n 自动化整合
-  - 同步跑步记录功能
-  - 训练历程自动更新
-- **训练历程列表**：
-  - 显示每次跑步的详细记录
-  - 路线名称、距离、时间、配速
-  - 时间序排列
+#### 📅 第一個標籤：訓練計畫
 
-#### 第三个标签：数据分析
-- **统计卡片**：
-  - 平均配速
-  - 总训练次数
-  - 最长距离
-  - 总卡路里消耗
-- **数据可视化**（ECharts）：
-  - **每日跑步里程折线图**：
-    - 显示最近 7 天的跑步里程
-    - 平滑曲线
-    - 区域填充效果
-    - 互动式 Tooltip
-  - **配速分布饼图**：
-    - 轻松跑、耐力跑、节奏跑分类
-    - 环形图设计
-    - 百分比显示
-  - **月度训练统计柱状图**：
-    - 每周累积里程展示
-    - 渐变色柱状图
-    - 清晰的数据对比
+##### 進度追蹤卡片
+- **剩餘公里**：
+  - 顯示還需完成的公里數
+  - 目標總計顯示
+  - 進度條視覺化
+- **剩餘天數**：
+  - 倒數計時顯示距離比賽結束的天數
+  - 比賽日期：2026/03/07 - 03/16（共 10 天）
+- **已完成里程**：
+  - 累積完成的總公里數
+  - 完成度百分比
+
+##### 訓練計畫表
+- **每日計畫卡片**：
+  - 顯示日期（DAY 1, DAY 2...）
+  - 計畫距離（每天應跑公里數）
+  - 推薦地點（系統根據居住地區推薦）
+  - 實際距離（完成後顯示）
+- **訓練按鈕**：
+  - 「訓練去」按鈕開啟 GPS 追蹤
+  - 只能同時進行一個訓練
+  - 完成後按鈕變為「已完成」狀態
+
+##### GPS 追蹤功能
+- **追蹤介面**（點擊「訓練去」後顯示）：
+  - 大字體顯示訓練時間（分:秒）
+  - 即時預估距離（根據時間計算）
+  - 配速顯示（分/公里）
+  - 「完成訓練」按鈕停止追蹤
+- **自動記錄**：
+  - 訓練完成後自動更新計畫表
+  - 記錄實際跑步距離
+  - 累加至總完成里程
+  - 加入訓練歷程列表
+
+#### 🏃 第二個標籤：訓練記錄
+
+##### 統計卡片
+- **累計完成**：總完成公里數
+- **訓練次數**：已完成的訓練次數
+- **平均配速**：每公里平均時間
+- **已完成天數**：完成訓練的天數
+
+##### 訓練歷程列表
+- 顯示每次訓練的詳細記錄：
+  - 跑步距離
+  - 訓練日期與時間
+  - 路線名稱
+  - 配速資訊
+- 按時間倒序排列（最新的在上面）
+- 精美的卡片式設計
+- 空狀態提示（無記錄時）
+
+#### 📊 第三個標籤：數據分析
+
+##### 統計卡片
+- **平均配速**：整體訓練配速
+- **總訓練次數**：完成的訓練總數
+- **最長距離**：單次訓練的最長距離
+- **訓練達成率**：完成天數 ÷ 總天數
+
+##### 數據視覺化（ECharts）
+- **每日訓練距離折線圖**：
+  - 顯示每天完成的跑步里程
+  - 平滑曲線
+  - 區域填充效果
+  - 互動式 Tooltip
+- **計畫 vs 實際完成柱狀圖**：
+  - 對比每天的計畫距離與實際完成距離
+  - 雙色柱狀圖（計畫 / 實際）
+  - 渐變色設計
+  - 清晰的數據對比
+- **空狀態提示**：
+  - 無數據時顯示友善訊息
+  - 引導用戶開始訓練
 
 ### 🌐 社群功能
-- 发布路跑心得
+- 發佈路跑心得
 - 查看其他跑者分享
-- 评论与互动
+- 評論與互動
 
 ---
 
-## 🛠️ 技术架构
+## 🛠️ 技術架構
 
-### 前端技术栈
+### 前端技術棧
 
-#### React 技术（从基础到应用）
+#### React 技術（從基礎到應用）
 
-1. **基础技术**
+1. **基礎技術**
    - React 18.3.1：核心框架
-   - TypeScript 5.3.0：类型安全
+   - TypeScript 5.3.0：類型安全
    - React Hooks：
-     - `useState`: 状态管理
-     - `useEffect`: 副作用处理
-     - `useRef`: DOM 引用
+     - `useState`: 狀態管理
+     - `useEffect`: 副作用處理
 
-2. **状态管理**
-   - React Context API：全局状态共享
-   - Local State：组件内部状态
-   - Props Drilling：组件间数据传递
+2. **狀態管理**
+   - React Context API：全域狀態共享
+   - Local State：組件內部狀態
+   - Props Drilling：組件間數據傳遞
 
-3. **UI 组件开发**
-   - 函数式组件设计
-   - 组件化架构
-   - Props 接口设计
-   - 条件渲染
-   - 列表渲染与 Key 优化
+3. **UI 組件開發**
+   - 函數式組件設計
+   - 組件化架構
+   - Props 介面設計
+   - 條件渲染
+   - 列表渲染與 Key 優化
 
-4. **进阶应用**
-   - Modal 组件封装
-   - 自定义 Hooks
-   - 性能优化（避免不必要的重渲染）
-   - 事件处理与表单控制
+4. **進階應用**
+   - Modal 組件封裝
+   - 自訂 Hooks
+   - 效能優化（避免不必要的重渲染）
+   - 事件處理與表單控制
 
-5. **样式技术**
+5. **樣式技術**
    - **Tailwind CSS 3.4**：
      - Utility-first CSS 框架
-     - 响应式设计（sm, md, lg, xl 断点）
-     - 自定义配置
-     - Dark mode 支持
-     - 动画效果（transition, transform, animate）
-   - **模块化样式**：
-     - 组件级样式封装
-     - 条件样式类名
-     - 动态样式绑定
+     - 響應式設計（sm, md, lg, xl 斷點）
+     - 自訂配置
+     - Dark mode 支援
+     - 動畫效果（transition, transform, animate）
+   - **模組化樣式**：
+     - 組件級樣式封裝
+     - 條件樣式類名
+     - 動態樣式綁定
 
-6. **图标系统**
+6. **圖標系統**
    - Lucide React 0.563.0：
-     - 丰富的图标库
-     - Tree-shaking 优化
-     - TypeScript 支持
+     - 豐富的圖標庫
+     - Tree-shaking 優化
+     - TypeScript 支援
 
-7. **数据可视化**
-   - **ECharts 5.5.1**：企业级图表库
-   - **echarts-for-react 3.0.2**：React 封装
-   - 图表类型：
-     - 折线图（Line Chart）
-     - 柱状图（Bar Chart）
-     - 饼图（Pie Chart）
+7. **數據可視化**
+   - **ECharts 5.5.1**：企業級圖表庫
+   - **echarts-for-react 3.0.2**：React 封裝
+   - 圖表類型：
+     - 折線圖（Line Chart）
+     - 柱狀圖（Bar Chart）
    - 特性：
-     - 响应式设计
-     - 互动式 Tooltip
-     - 渐变色填充
-     - 动画效果
+     - 響應式設計
+     - 互動式 Tooltip
+     - 渐變色填充
+     - 動畫效果
 
 8. **HTTP 通信**
-   - Axios 1.6.0：HTTP 客户端
-   - Fetch API：原生请求
+   - Axios 1.6.0：HTTP 客戶端
+   - Fetch API：原生請求
    - RESTful API 整合
 
-9. **构建工具**
+9. **建置工具**
    - **Vite 7.3.1**：
-     - 极速的开发服务器
+     - 極速的開發伺服器
      - Hot Module Replacement (HMR)
-     - 优化的生产构建
-     - TypeScript 原生支持
-     - ESM 优先
+     - 優化的生產建置
+     - TypeScript 原生支援
+     - ESM 優先
 
-10. **测试框架**
-    - Jest 29.7.0：测试运行器
-    - React Testing Library 14.0.0：组件测试
-    - 单元测试
-    - 集成测试
+10. **測試框架**
+    - Jest 29.7.0：測試運行器
+    - React Testing Library 14.0.0：組件測試
+    - 單元測試
+    - 整合測試
 
-### 後端技术栈（Python）
+### 後端技術棧（Python）
 
 1. **Web 框架**
    - **FastAPI**：
-     - 现代化的 Python Web 框架
-     - 自动 API 文档生成（Swagger UI）
-     - 基於 ASGI 的异步处理
-     - 类型提示支持
-     - 高性能
+     - 現代化的 Python Web 框架
+     - 自動 API 文件生成（Swagger UI）
+     - 基於 ASGI 的非同步處理
+     - 類型提示支援
+     - 高效能
 
-2. **数据验证**
+2. **數據驗證**
    - **Pydantic**：
-     - 数据模型定义
-     - 自动验证
+     - 數據模型定義
+     - 自動驗證
      - JSON Schema 生成
-     - 类型安全
+     - 類型安全
 
-3. **HTTP 服务器**
+3. **HTTP 伺服器**
    - **Uvicorn**：
-     - ASGI 服务器
-     - 支持异步处理
-     - WebSocket 支持
+     - ASGI 伺服器
+     - 支援非同步處理
+     - WebSocket 支援
 
 4. **安全性**
-   - Hashlib (SHA-256)：密码加密
-   - CORS 跨域处理
-   - HTTPBearer 认证
+   - Hashlib (SHA-256)：密碼加密
+   - CORS 跨域處理
+   - HTTPBearer 認證
 
-5. **数据库**
-   - 开发环境：内存数据库（Python Dictionary）
-   - 生产环境：可扩展至 PostgreSQL / MongoDB
-   - ORM：SQLAlchemy（可选）
+5. **資料庫**
+   - 開發環境：記憶體資料庫（Python Dictionary）
+   - 生產環境：可擴展至 PostgreSQL / MongoDB
+   - ORM：SQLAlchemy（可選）
 
-6. **测试**
+6. **測試**
    - **Pytest**：
-     - 单元测试
-     - API 端点测试
-     - Fixture 支持
+     - 單元測試
+     - API 端點測試
+     - Fixture 支援
 
-7. **API 设计**
-   - RESTful API 架构
-   - JSON 数据格式
-   - 状态码规范
-   - 错误处理机制
-
----
-
-## 🤖 n8n 自动化功能
-
-### n8n 整合说明
-
-n8n 是一个开源的工作流自动化工具，在本专案中用於实现以下功能：
-
-### 1. **智慧路跑管家**
-- **功能描述**：自动同步跑步数据
-- **实现方式**：
-  - 通过 Webhook 触发 n8n 工作流
-  - 自动抓取用户的跑步记录
-  - 同步至平台数据库
-  - 更新训练历程显示
-
-### 2. **数据同步流程**
-```
-用户点击「立即同步」
-    ↓
-发送 HTTP POST 至 n8n Webhook
-    ↓
-n8n 处理数据（2秒模拟）
-    ↓
-返回同步结果
-    ↓
-前端更新显示
-```
-
-### 3. **自动化场景**
-- **下班夜跑提醒**：
-  - 定时任务触发
-  - 推荐合适路线
-  - 发送通知
-- **GA4 数据导出**：
-  - 自动追踪 GPS 数据
-  - 导出至 Google Analytics 4
-  - 生成训练报表
-- **成就解锁通知**：
-  - 监测里程达成
-  - 自动发送成就通知
-
-### 4. **n8n Workflow 设置**
-```javascript
-// Webhook 节点配置
-{
-  "method": "POST",
-  "path": "/sync-run-data",
-  "responseMode": "onReceived"
-}
-
-// HTTP Request 节点
-{
-  "url": "{{YOUR_N8N_WEBHOOK_URL}}",
-  "method": "POST",
-  "body": {
-    "userId": "{{$json.userId}}",
-    "runData": "{{$json.logs}}"
-  }
-}
-```
-
-### 5. **环境配置**
-在 `.env` 文件中设置：
-```
-N8N_WEBHOOK_URL=https://your-n8n-instance.com/webhook/YOUR_WEBHOOK_ID
-```
+7. **API 設計**
+   - RESTful API 架構
+   - JSON 數據格式
+   - 狀態碼規範
+   - 錯誤處理機制
 
 ---
 
-## 🖼️ UI 展示
-
-### 首页
-![首页展示](./docs/screenshots/homepage.png)
-- Hero 区块展示
-- 响应式 Header 导航
-- 樱花飘落动画效果
-
-### 个人专区 - 路线选择
-![路线选择](./docs/screenshots/routes.png)
-- 地区与城市筛选
-- 路线卡片展示
-- 多选互动效果
-
-### 个人专区 - 数据分析
-![数据分析](./docs/screenshots/analytics.png)
-- ECharts 折线图
-- 饼图与柱状图
-- 统计卡片展示
-
-### GPS 地图 Modal
-![GPS地图](./docs/screenshots/gps-modal.png)
-- Google 地图整合
-- 路线详细资讯
-- 外部链接功能
-
----
-
-## 📁 专案结构
+## 📁 專案結構
 
 ```
 fuji-sakura-run/
-├── frontend/
-│   ├── src/
-│   │   ├── components/          # React 组件
-│   │   │   ├── Header.tsx       # 导航栏组件
-│   │   │   ├── SakuraFalling.tsx # 樱花动画
-│   │   │   ├── Dashboard.tsx    # 仪表板（已弃用）
-│   │   │   ├── Community.tsx    # 社群组件
-│   │   │   ├── BoardSection.tsx # 留言板区块
-│   │   │   ├── GPSTracker.tsx   # GPS 追踪器
-│   │   │   └── ...
-│   │   ├── pages/               # 页面组件
-│   │   │   ├── HomePage.tsx     # 首页
-│   │   │   ├── LoginPage.tsx    # 登入页
-│   │   │   └── SelfDisciplinePage.tsx # 个人专区（重构後）
-│   │   ├── services/            # API 服务
-│   │   │   └── api.ts          # API 调用函数
-│   │   ├── store/              # 状态管理
-│   │   │   └── CommunityContext.tsx
-│   │   ├── types/              # TypeScript 类型定义
-│   │   │   ├── index.ts
-│   │   │   └── globals.d.ts
-│   │   ├── constants/          # 常量定义
-│   │   │   └── index.ts
-│   │   ├── assets/             # 静态资源
-│   │   │   └── images/
-│   │   ├── __tests__/          # 测试文件
-│   │   ├── App.tsx             # 根组件
-│   │   ├── index.tsx           # 入口文件
-│   │   └── index.css           # 全局样式
-│   ├── public/                 # 公共资源
-│   ├── package.json            # 依赖配置
-│   ├── tsconfig.json           # TypeScript 配置
-│   ├── vite.config.ts          # Vite 配置
-│   ├── tailwind.config.js      # Tailwind CSS 配置
-│   ├── postcss.config.js       # PostCSS 配置
-│   └── jest.config.ts          # Jest 测试配置
-│
+├── src/
+│   ├── components/          # React 組件
+│   │   ├── Header.tsx       # 導航列組件
+│   │   ├── SakuraFalling.tsx # 櫻花動畫
+│   │   ├── Community.tsx    # 社群組件
+│   │   ├── BoardSection.tsx # 留言板區塊
+│   │   ├── GPSTracker.tsx   # GPS 追蹤器
+│   │   └── ...
+│   ├── pages/               # 頁面組件
+│   │   ├── HomePage.tsx     # 首頁
+│   │   ├── LoginPage.tsx    # 登入頁
+│   │   └── SelfDisciplinePage.tsx # 個人專區（自律表）
+│   ├── services/            # API 服務
+│   │   └── api.ts          # API 調用函數
+│   ├── store/              # 狀態管理
+│   │   └── CommunityContext.tsx
+│   ├── types/              # TypeScript 類型定義
+│   │   ├── index.ts
+│   │   └── globals.d.ts
+│   ├── constants/          # 常數定義
+│   │   └── index.ts
+│   ├── assets/             # 靜態資源
+│   │   └── images/
+│   ├── __tests__/          # 測試檔案
+│   ├── App.tsx             # 根組件
+│   ├── index.tsx           # 入口檔案
+│   └── index.css           # 全域樣式
 ├── backend/
-│   ├── main.py                 # API 路由定义与主应用
-│   ├── models.py               # Pydantic 数据模型
-│   ├── database.py             # 数据库操作
-│   ├── test_main.py            # 後端 API 端点测试
-│   ├── test_models.py          # 模型测试
-│   ├── test_database.py        # 数据库测试
-│   ├── requirements.txt        # Python 依赖
-│   └── requirements-test.txt   # 测试依赖
-│
-├── README.md                   # 专案说明文档
-├── REFACTOR_SUMMARY.md         # 重构总结
-├── .env.example                # 环境变量范例
-├── start.bat                   # Windows 启动脚本
-└── start.sh                    # Unix/Linux 启动脚本
+│   ├── main.py                 # API 路由定義與主應用
+│   ├── models.py               # Pydantic 數據模型
+│   ├── database.py             # 資料庫操作
+│   ├── test_main.py            # 後端 API 端點測試
+│   ├── test_models.py          # 模型測試
+│   ├── test_database.py        # 資料庫測試
+│   ├── requirements.txt        # Python 依賴
+│   └── requirements-test.txt   # 測試依賴
+├── public/                 # 公共資源
+├── package.json            # 依賴配置
+├── tsconfig.json           # TypeScript 配置
+├── vite.config.ts          # Vite 配置
+├── tailwind.config.js      # Tailwind CSS 配置
+├── postcss.config.js       # PostCSS 配置
+├── jest.config.ts          # Jest 測試配置
+├── README.md               # 專案說明文件
+├── start.bat               # Windows 啟動腳本
+└── start.sh                # Unix/Linux 啟動腳本
 ```
 
 ---
 
-## 🚀 安装与执行
+## 🚀 安裝與執行
 
 ### 前置需求
 - Node.js 18+ 
@@ -427,49 +342,49 @@ fuji-sakura-run/
 - npm 或 yarn
 - Git
 
-### 1. 克隆专案
+### 1. 複製專案
 ```bash
 git clone https://github.com/your-username/fuji-sakura-run.git
 cd fuji-sakura-run
 ```
 
-### 2. 前端安装与启动
+### 2. 前端安裝與啟動
 
 ```bash
-# 安装依赖
+# 安裝依賴
 npm install
 
 # 或使用 yarn
 yarn install
 
-# 启动开发服务器
+# 啟動開發伺服器
 npm run dev
 
-# 构建生产版本
+# 建置生產版本
 npm run build
 
-# 预览生产构建
+# 預覽生產建置
 npm run preview
 ```
 
-前端将在 `http://localhost:5173` 运行
+前端將在 `http://localhost:5173` 運行
 
-### 3. 後端安装与启动
+### 3. 後端安裝與啟動
 
 #### Windows
 ```bash
 cd backend
 
-# 创建虚拟环境
+# 建立虛擬環境
 python -m venv venv
 
-# 激活虚拟环境
+# 啟動虛擬環境
 venv\Scripts\activate
 
-# 安装依赖
+# 安裝依賴
 pip install -r requirements.txt
 
-# 启动服务器
+# 啟動伺服器
 python -m uvicorn main:app --reload
 ```
 
@@ -477,24 +392,24 @@ python -m uvicorn main:app --reload
 ```bash
 cd backend
 
-# 创建虚拟环境
+# 建立虛擬環境
 python3 -m venv venv
 
-# 激活虚拟环境
+# 啟動虛擬環境
 source venv/bin/activate
 
-# 安装依赖
+# 安裝依賴
 pip install -r requirements.txt
 
-# 启动服务器
+# 啟動伺服器
 python -m uvicorn main:app --reload
 ```
 
-後端将在 `http://localhost:8000` 运行
+後端將在 `http://localhost:8000` 運行
 
-API 文档：`http://localhost:8000/docs`
+API 文件：`http://localhost:8000/docs`
 
-### 4. 使用启动脚本（推荐）
+### 4. 使用啟動腳本（推薦）
 
 #### Windows
 ```bash
@@ -507,49 +422,49 @@ chmod +x start.sh
 ./start.sh
 ```
 
-启动脚本会自动：
-- 检查 Python 和 Node.js 版本
-- 创建虚拟环境
-- 安装依赖
-- 同时启动前後端服务器
+啟動腳本會自動：
+- 檢查 Python 和 Node.js 版本
+- 建立虛擬環境
+- 安裝依賴
+- 同時啟動前後端伺服器
 
 ---
 
-## 🧪 测试
+## 🧪 測試
 
-### 前端测试
+### 前端測試
 ```bash
-# 运行所有测试
+# 運行所有測試
 npm test
 
-# 运行测试并生成覆盖率报告
+# 運行測試並生成覆蓋率報告
 npm test -- --coverage
 
-# 监视模式
+# 監視模式
 npm test -- --watch
 ```
 
-### 後端测试
+### 後端測試
 ```bash
 cd backend
 
-# 安装测试依赖
+# 安裝測試依賴
 pip install -r requirements-test.txt
 
-# 运行测试
+# 運行測試
 pytest
 
-# 生成覆盖率报告
+# 生成覆蓋率報告
 pytest --cov=. --cov-report=html
 ```
 
 ---
 
-## 📊 数据流程图
+## 📊 數據流程圖
 
 ```
 ┌─────────────┐
-│   用户界面   │
+│   用戶介面   │
 │  (React App) │
 └──────┬──────┘
        │
@@ -558,150 +473,132 @@ pytest --cov=. --cov-report=html
 ┌──────▼──────┐      ┌──────────┐
 │  FastAPI    │◄────►│ Database │
 │   Backend   │      └──────────┘
-└──────┬──────┘
-       │
-       │ Webhook
-       │
-┌──────▼──────┐      ┌──────────┐
-│     n8n     │◄────►│   GA4    │
-│  Automation │      │Analytics │
-└─────────────┘      └──────────┘
+└─────────────┘
 ```
 
 ---
 
-## 🔧 环境配置
+## 🔧 環境配置
 
-创建 `.env` 文件：
+建立 `.env` 檔案：
 
 ```env
-# 前端环境变量
+# 前端環境變數
 VITE_API_BASE_URL=http://localhost:8000
-VITE_APP_NAME=富士樱花路跑
+VITE_APP_NAME=富士櫻花路跑
 
-# n8n Webhook URL（选填）
-VITE_N8N_WEBHOOK_URL=https://your-n8n-instance.com/webhook/YOUR_ID
-
-# Google Maps API Key（用於地图功能）
+# Google Maps API Key（用於地圖功能）
 VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
 ```
 
-**获取 Google Maps API Key**：
-1. 访问 [Google Cloud Console](https://console.cloud.google.com/)
-2. 创建新专案或选择现有专案
-3. 启用 Maps JavaScript API 和 Maps Embed API
-4. 创建 API 密钥
-5. 设置 API 密钥限制（HTTP referrer）
+**取得 Google Maps API Key**：
+1. 訪問 [Google Cloud Console](https://console.cloud.google.com/)
+2. 建立新專案或選擇現有專案
+3. 啟用 Maps JavaScript API 和 Maps Embed API
+4. 建立 API 金鑰
+5. 設定 API 金鑰限制（HTTP referrer）
 
 ---
 
-## 🎨 设计特色
+## 🎨 設計特色
 
-### 视觉设计
+### 視覺設計
 - **配色方案**：
   - 主色：Pink (#ec4899)
-  - 辅助色：Indigo (#6366f1)
+  - 輔助色：Indigo (#6366f1)
   - 中性色：Slate 系列
-- **字体**：
-  - 系统字体堆叠
-  - 支持中文优化
-- **动画效果**：
-  - Tailwind 原生动画
-  - 平滑过渡效果
-  - Hover 互动反馈
+- **字體**：
+  - 系統字體堆疊
+  - 支援中文優化
+- **動畫效果**：
+  - Tailwind 原生動畫
+  - 平滑過渡效果
+  - Hover 互動反饋
 
-### 响应式设计
+### 響應式設計
 - Mobile First 方法
-- 断点设置：
+- 斷點設置：
   - sm: 640px
   - md: 768px
   - lg: 1024px
   - xl: 1280px
   - 2xl: 1536px
 
-### 用户体验
-- 直觉式导航
-- 快速反馈
-- 流畅的动画过渡
-- 无障碍设计（Accessibility）
+### 用戶體驗
+- 直覺式導航
+- 快速反饋
+- 流暢的動畫過渡
+- 無障礙設計（Accessibility）
 
 ---
 
-## 📝 开发规范
+## 📝 開發規範
 
-### TypeScript 规范
-- 使用接口定义 Props
-- 避免使用 `any` 类型
-- 善用类型推导
-- 组件 Props 必须定义类型
+### TypeScript 規範
+- 使用介面定義 Props
+- 避免使用 `any` 類型
+- 善用類型推導
+- 組件 Props 必須定義類型
 
-### React 规范
-- 函数式组件优先
-- Hooks 使用规范
+### React 規範
+- 函數式組件優先
+- Hooks 使用規範
 - 避免不必要的重渲染
-- 合理拆分组件
+- 合理拆分組件
 
-### 样式规范
+### 樣式規範
 - Tailwind Utility Classes
-- 避免内联样式（除非动态）
-- 保持样式一致性
-- 响应式优先
+- 避免內聯樣式（除非動態）
+- 保持樣式一致性
+- 響應式優先
 
 ---
 
-## 🚧 未来规划
+## 🚧 未來規劃
 
-- [ ] 增加更多图表类型
-- [ ] 实现实时 GPS 追踪
+- [ ] 實現真實 GPS 追蹤整合
+- [ ] 增加更多圖表類型
 - [ ] 加入社交分享功能
-- [ ] 开发移动端 App
-- [ ] 多语言支持（i18n）
-- [ ] PWA 支持
+- [ ] 開發行動端 App
+- [ ] 多語言支援（i18n）
+- [ ] PWA 支援
 - [ ] 深色模式
-- [ ] 用户成就系统
+- [ ] 用戶成就系統
 - [ ] 排行榜功能
+- [ ] 匯出訓練報表（PDF）
 
 ---
 
-## 🤝 贡献指南
+## 🤝 貢獻指南
 
-欢迎贡献！请遵循以下步骤：
+歡迎貢獻！請遵循以下步驟：
 
-1. Fork 此专案
-2. 创建您的特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交您的改动 (`git commit -m 'Add some AmazingFeature'`)
+1. Fork 此專案
+2. 建立您的特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交您的改動 (`git commit -m 'Add some AmazingFeature'`)
 4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
+5. 開啟 Pull Request
 
 ---
 
-## 📄 授权条款
+## 📄 授權條款
 
 MIT License
 
 ---
 
-## 📧 联系方式
-
-专案维护者：[Your Name]
-- Email: your.email@example.com
-- GitHub: [@your-username](https://github.com/your-username)
-
----
-
-## 🙏 致谢
+## 🙏 致謝
 
 - [React](https://react.dev/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [FastAPI](https://fastapi.tiangolo.com/)
 - [ECharts](https://echarts.apache.org/)
 - [Lucide Icons](https://lucide.dev/)
-- [n8n](https://n8n.io/)
-- [Unsplash](https://unsplash.com/) - 图片来源
+- [Unsplash](https://unsplash.com/) - 圖片來源
 
 ---
 
 <div align="center">
   <p>Made with ❤️ and 🌸</p>
-  <p>© 2026 富士樱花路跑专案</p>
+  <p>© 2026 富士櫻花路跑專案</p>
 </div>
