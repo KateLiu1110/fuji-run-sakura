@@ -290,18 +290,6 @@ className="animate-in fade-in zoom-in-95 duration-300"
 // 過渡效果
 className="transition-all hover:scale-110"
 
-// 自定義動畫
-<style dangerouslySetInnerHTML={{
-  __html: `
-    @keyframes fall {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(100vh); }
-    }
-    .animate-fall {
-      animation: fall linear forwards;
-    }
-  `
-}} />
 ```
 
 **學習心得：**
