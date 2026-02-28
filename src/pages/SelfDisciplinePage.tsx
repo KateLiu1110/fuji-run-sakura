@@ -26,11 +26,35 @@ import {
   AlertCircle
 } from 'lucide-react';
 
+
+interface RunData {
+  id: number;
+  date: string;
+  route: string;
+  distance: number;
+  time: string;
+  pace: string;
+}
 interface SelfDisciplinePageProps {
   isLoggedIn: boolean;
   setIsLoggedIn: (value: boolean) => void;
 }
 
+// 單一跑步路線的資料結構
+interface RunningRoute {
+  id: string;
+  name: string;
+  distance: number;
+  image: string;
+}
+
+// 城市資料結構：Key 是城市名稱，Value 是路線陣列
+interface CityData {
+  [cityName: string]: RunningRoute[];
+}
+
+// 區域資料結構：Key 是區域名稱 (北部/中部/南部)
+type RunningRoutesData = Record<string, CityData>;
 // 比賽組別
 type RaceCategory = '50km' | '25km' | '10km' | null;
 
@@ -40,7 +64,7 @@ const RACE_END_DATE = new Date('2026-03-16T23:59:59');
 const RACE_DAYS = 10; // 3/7-3/16 共10天
 
 // 跑步路線資料（按地區分類）
-const RUNNING_ROUTES = {
+const RUNNING_ROUTES: RunningRoutesData = {
   '北部': {
     '台北市': [
       { id: '1', name: '松山河堤', distance: 5.2, image: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=400' },
@@ -90,7 +114,8 @@ const SelfDisciplinePage: React.FC<SelfDisciplinePageProps> = ({ isLoggedIn, set
   const [showRegionModal, setShowRegionModal] = useState(false);
   const [showRouteDisplayModal, setShowRouteDisplayModal] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
-  const [activeTab, setActiveTab] = useState<'plan' | 'tracking' | 'analytics'>('plan');
+// App.tsx 內
+const [activeTab, setActiveTab] = useState<"home" | "discipline" | "plan" | "tracking" | "analytics">("home");
   
   // 報名資訊
   const [selectedCategory, setSelectedCategory] = useState<RaceCategory>(null);
@@ -107,7 +132,7 @@ const SelfDisciplinePage: React.FC<SelfDisciplinePageProps> = ({ isLoggedIn, set
   const [trackingTime, setTrackingTime] = useState(0);
   
   // 訓練歷程
-  const [runHistory, setRunHistory] = useState<any[]>([]);
+  const [runHistory, setRunHistory] = useState<RunData[]>([]);
   
   // 檢查是否完成目標
   useEffect(() => {
@@ -494,10 +519,11 @@ const SelfDisciplinePage: React.FC<SelfDisciplinePageProps> = ({ isLoggedIn, set
 
   // 練跑地點展示彈窗
   const RouteDisplayModal = () => {
-    const cityRoutes = selectedRegion && selectedCity 
-      ? RUNNING_ROUTES[selectedRegion as keyof typeof RUNNING_ROUTES][selectedCity]
-      : [];
-
+  const regionData = selectedRegion ? RUNNING_ROUTES[selectedRegion] : null;
+  
+  const cityRoutes: RunningRoute[] = (regionData && selectedCity)
+    ? regionData[selectedCity]
+    : [];
     return (
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md overflow-y-auto">
         <div className="bg-gradient-to-br from-white to-pink-50 rounded-[3rem] p-8 md:p-12 max-w-4xl w-full shadow-2xl animate-in zoom-in-95 duration-300 border-2 border-pink-100 my-8">

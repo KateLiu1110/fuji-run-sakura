@@ -4,9 +4,11 @@ import HomePage from './pages/HomePage';
 import SelfDisciplinePage from './pages/SelfDisciplinePage';
 import LoginPage from './pages/LoginPage';
 import { CommunityProvider } from './store/CommunityContext';
+type ViewState = 'home' | 'discipline';
 
 const App: React.FC = () => {
-  const [view, setView] = useState<'home' | 'discipline'>('home');
+  const [view, setView] = useState<ViewState>('home');
+  const currentView: ViewState = view;
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem('fuji_is_logged_in') === 'true';
   });
@@ -24,7 +26,7 @@ const App: React.FC = () => {
   };
 
   const handleViewChange = (newView: 'home' | 'discipline') => {
-    if (view === 'discipline' && isLoggedIn && newView === 'home') {
+    if (currentView !== 'home' && isLoggedIn && newView === 'home') {
       setPendingView(newView);
       setShowLogoutConfirm(true);
       return;
@@ -47,16 +49,12 @@ const App: React.FC = () => {
     setPendingView(null);
   };
 
-  // 如果未登入且在自律表頁面，先顯示登入頁
-  if (view === 'discipline' && !isLoggedIn) {
-    return <LoginPage onLogin={handleLogin} />;
-  }
 
   return (
     <CommunityProvider>
       <div className="min-h-screen bg-slate-50 font-sans text-slate-800 relative">
         {/* 固定導航欄 - 僅在自律表頁面顯示 */}
-        {view === 'discipline' && (
+        {currentView === 'home' && (
           <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50 px-4 md:px-8 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2 cursor-pointer group" onClick={() => handleViewChange('home')}>
               <div className="bg-pink-500 p-2 rounded-full text-white transition-transform group-hover:scale-110">
@@ -69,7 +67,7 @@ const App: React.FC = () => {
               <button
                 onClick={() => handleViewChange('home')}
                 className={`flex items-center gap-2 py-2 px-4 rounded-lg transition-all font-bold ${
-                  view === 'home' 
+                  currentView  === 'home' 
                     ? 'text-white bg-pink-500 shadow-lg shadow-pink-200' 
                     : 'text-slate-600 hover:text-pink-500 hover:bg-pink-50'
                 }`}
@@ -81,7 +79,7 @@ const App: React.FC = () => {
               <button
                 onClick={() => handleViewChange('discipline')}
                 className={`flex items-center gap-2 py-2 px-4 rounded-lg transition-all font-bold ${
-                  view === 'discipline' 
+                  currentView === 'home' 
                     ? 'text-white bg-pink-500 shadow-lg shadow-pink-200' 
                     : 'text-slate-600 hover:text-pink-500 hover:bg-pink-50'
                 }`}
@@ -122,9 +120,14 @@ const App: React.FC = () => {
 
         {/* Main Content */}
         <div className={view === 'discipline' ? 'pt-16' : ''}>
-          {view === 'home' ? (
+          {(currentView ) === 'home' ? (
+            // 情況 A: 頁面是首頁
             <HomePage onNavigateToDiscipline={() => handleViewChange('discipline')} />
+          ) : !isLoggedIn ? (
+            // 情況 B: 頁面是自律表，但「未登入」
+            <LoginPage onLogin={handleLogin} />
           ) : (
+            // 情況 C: 頁面是自律表，且「已登入」
             <SelfDisciplinePage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
           )}
         </div>
