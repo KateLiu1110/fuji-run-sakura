@@ -4,6 +4,7 @@ import path from 'path'
 
 export default defineConfig({
 	plugins: [react()],
+	base: '/fuji-run-sakura/',
 	resolve: {
 		alias: {
 			'@': path.resolve(__dirname, 'src'),
