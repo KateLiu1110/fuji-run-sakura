@@ -55,41 +55,43 @@ const App: React.FC = () => {
   return (
     <CommunityProvider>
       <div className="min-h-screen bg-slate-50 font-sans text-slate-800 relative">
-        {/* 固定導航欄 */}
-        <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50 px-4 md:px-8 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2 cursor-pointer group" onClick={() => handleViewChange('home')}>
-            <div className="bg-pink-500 p-2 rounded-full text-white transition-transform group-hover:scale-110">
-              <Home size={20} />
+        {/* 固定導航欄 - 僅在自律表頁面顯示 */}
+        {view === 'discipline' && (
+          <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-sm z-50 px-4 md:px-8 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2 cursor-pointer group" onClick={() => handleViewChange('home')}>
+              <div className="bg-pink-500 p-2 rounded-full text-white transition-transform group-hover:scale-110">
+                <Home size={20} />
+              </div>
+              <span className="font-bold text-lg hidden sm:inline tracking-wider">櫻色富士</span>
             </div>
-            <span className="font-bold text-lg hidden sm:inline tracking-wider">櫻色富士</span>
-          </div>
 
-          <div className="flex items-center gap-2 text-sm font-medium">
-            <button
-              onClick={() => handleViewChange('home')}
-              className={`flex items-center gap-2 py-2 px-4 rounded-lg transition-all font-bold ${
-                view === 'home' 
-                  ? 'text-white bg-pink-500 shadow-lg shadow-pink-200' 
-                  : 'text-slate-600 hover:text-pink-500 hover:bg-pink-50'
-              }`}
-            >
-              <Home size={18}/>
-              <span className="hidden md:inline">首頁</span>
-            </button>
-            
-            <button
-              onClick={() => handleViewChange('discipline')}
-              className={`flex items-center gap-2 py-2 px-4 rounded-lg transition-all font-bold ${
-                view === 'discipline' 
-                  ? 'text-white bg-pink-500 shadow-lg shadow-pink-200' 
-                  : 'text-slate-600 hover:text-pink-500 hover:bg-pink-50'
-              }`}
-            >
-              <CheckCircle size={18}/>
-              <span className="hidden md:inline">自律表</span>
-            </button>
-          </div>
-        </nav>
+            <div className="flex items-center gap-2 text-sm font-medium">
+              <button
+                onClick={() => handleViewChange('home')}
+                className={`flex items-center gap-2 py-2 px-4 rounded-lg transition-all font-bold ${
+                  view === 'home' 
+                    ? 'text-white bg-pink-500 shadow-lg shadow-pink-200' 
+                    : 'text-slate-600 hover:text-pink-500 hover:bg-pink-50'
+                }`}
+              >
+                <Home size={18}/>
+                <span className="hidden md:inline">首頁</span>
+              </button>
+              
+              <button
+                onClick={() => handleViewChange('discipline')}
+                className={`flex items-center gap-2 py-2 px-4 rounded-lg transition-all font-bold ${
+                  view === 'discipline' 
+                    ? 'text-white bg-pink-500 shadow-lg shadow-pink-200' 
+                    : 'text-slate-600 hover:text-pink-500 hover:bg-pink-50'
+                }`}
+              >
+                <CheckCircle size={18}/>
+                <span className="hidden md:inline">自律表</span>
+              </button>
+            </div>
+          </nav>
+        )}
 
         {/* Logout Confirmation Popup */}
         {showLogoutConfirm && (
@@ -119,7 +121,7 @@ const App: React.FC = () => {
         )}
 
         {/* Main Content */}
-        <div className="pt-16">
+        <div className={view === 'discipline' ? 'pt-16' : ''}>
           {view === 'home' ? (
             <HomePage onNavigateToDiscipline={() => handleViewChange('discipline')} />
           ) : (

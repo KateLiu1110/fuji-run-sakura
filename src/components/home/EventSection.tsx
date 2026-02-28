@@ -32,7 +32,7 @@ const EventSection: React.FC<EventSectionProps> = ({ steps: propSteps }) => {
           setSteps(defaultSteps);
         }
       } catch (error) {
-        console.error('Failed to fetch registration steps:', error);
+        // 静默使用默认数据
         setSteps(defaultSteps);
       } finally {
         setLoading(false);

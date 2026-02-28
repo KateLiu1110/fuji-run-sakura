@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
+import Celebration from '../components/Celebration';
 import {
   User,
   Calendar as CalendarIcon,
@@ -87,6 +88,8 @@ const SelfDisciplinePage: React.FC<SelfDisciplinePageProps> = ({ isLoggedIn, set
   const [showLoginModal, setShowLoginModal] = useState(!isLoggedIn);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [showRegionModal, setShowRegionModal] = useState(false);
+  const [showRouteDisplayModal, setShowRouteDisplayModal] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
   const [activeTab, setActiveTab] = useState<'plan' | 'tracking' | 'analytics'>('plan');
   
   // 報名資訊
@@ -105,6 +108,16 @@ const SelfDisciplinePage: React.FC<SelfDisciplinePageProps> = ({ isLoggedIn, set
   
   // 訓練歷程
   const [runHistory, setRunHistory] = useState<any[]>([]);
+  
+  // 檢查是否完成目標
+  useEffect(() => {
+    if (selectedCategory && totalCompleted > 0) {
+      const targetDistance = parseInt(selectedCategory);
+      if (totalCompleted >= targetDistance && !showCelebration) {
+        setShowCelebration(true);
+      }
+    }
+  }, [totalCompleted, selectedCategory, showCelebration]);
   
   // GPS 追蹤計時器
   useEffect(() => {
@@ -174,7 +187,13 @@ const SelfDisciplinePage: React.FC<SelfDisciplinePageProps> = ({ isLoggedIn, set
   const handleRegionSelect = () => {
     if (selectedRegion && selectedCity) {
       setShowRegionModal(false);
+      setShowRouteDisplayModal(true);
     }
+  };
+  
+  // 確認練跑地點並開始
+  const handleStartTraining = () => {
+    setShowRouteDisplayModal(false);
   };
   
   // 開始訓練（開啟GPS）
@@ -473,6 +492,115 @@ const SelfDisciplinePage: React.FC<SelfDisciplinePageProps> = ({ isLoggedIn, set
     </div>
   );
 
+  // 練跑地點展示彈窗
+  const RouteDisplayModal = () => {
+    const cityRoutes = selectedRegion && selectedCity 
+      ? RUNNING_ROUTES[selectedRegion as keyof typeof RUNNING_ROUTES][selectedCity]
+      : [];
+
+    return (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md overflow-y-auto">
+        <div className="bg-gradient-to-br from-white to-pink-50 rounded-[3rem] p-8 md:p-12 max-w-4xl w-full shadow-2xl animate-in zoom-in-95 duration-300 border-2 border-pink-100 my-8">
+          {/* 活動日期區塊 */}
+          <div className="text-center mb-8">
+            <div className="inline-block bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-3 rounded-full mb-4 shadow-lg">
+              <span className="font-black text-lg">🌸 櫻色富士線上馬拉松 🗻</span>
+            </div>
+            <h3 className="text-3xl font-black text-slate-800 mb-3">比賽日期</h3>
+            <div className="bg-white/80 backdrop-blur rounded-2xl p-6 max-w-md mx-auto shadow-md border border-pink-200">
+              <div className="flex items-center justify-center gap-4 mb-2">
+                <CalendarIcon className="text-pink-500" size={32} />
+                <div>
+                  <p className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">
+                    03/07 - 03/16
+                  </p>
+                  <p className="text-slate-600 text-sm mt-1">2026 年 · 共 10 天</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 分隔線 */}
+          <div className="relative py-6 mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t-2 border-pink-200"></div>
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-gradient-to-r from-white to-pink-50 px-6 text-sm font-black text-pink-600 tracking-wider">
+                您的區域練跑地點
+              </span>
+            </div>
+          </div>
+
+          {/* 區域資訊 */}
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-6 py-3 rounded-full font-bold">
+              <MapPin size={20} />
+              <span>{selectedRegion} · {selectedCity}</span>
+            </div>
+          </div>
+
+          {/* 練跑地點卡片 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 max-h-[400px] overflow-y-auto pr-2">
+            {cityRoutes.map((route) => (
+              <div
+                key={route.id}
+                className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-slate-100 group hover:scale-105 duration-300"
+              >
+                {/* 地點照片 */}
+                <div className="relative h-40 overflow-hidden">
+                  <img
+                    src={route.image}
+                    alt={route.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute top-3 right-3 bg-pink-500 text-white px-3 py-1 rounded-full text-sm font-black shadow-lg">
+                    {route.distance} km
+                  </div>
+                </div>
+
+                {/* 地點資訊 */}
+                <div className="p-4">
+                  <h4 className="font-black text-slate-800 text-lg mb-1">{route.name}</h4>
+                  <p className="text-slate-500 text-sm flex items-center gap-1">
+                    <MapPin size={14} className="text-pink-500" />
+                    建議跑步距離：{route.distance} 公里
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* 提示訊息 */}
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-2xl p-6 mb-6">
+            <div className="flex items-start gap-4">
+              <div className="bg-blue-500 text-white rounded-full p-2 flex-shrink-0">
+                <AlertCircle size={24} />
+              </div>
+              <div>
+                <h4 className="font-black text-blue-900 mb-2">溫馨提醒</h4>
+                <p className="text-blue-700 text-sm leading-relaxed">
+                  以上是根據您選擇的 <span className="font-bold">{selectedCity}</span> 地區推薦的練跑地點。
+                  您可以在這些地點進行訓練，每個地點都標示了建議的跑步距離。
+                  記得在訓練時攜帶水和手機，注意安全！
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* 確認按鈕 */}
+          <button
+            onClick={handleStartTraining}
+            className="w-full py-5 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-2xl font-black text-xl shadow-xl hover:shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3"
+          >
+            <CheckCircle2 size={28} />
+            開始我的訓練計畫
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   // 標籤頁 1: 訓練計畫表
   const PlanTab = () => {
     if (!selectedCategory) return null;
@@ -483,10 +611,10 @@ const SelfDisciplinePage: React.FC<SelfDisciplinePageProps> = ({ isLoggedIn, set
     const progress = (totalCompleted / totalDistance) * 100;
     
     return (
-      <div className="space-y-6">
+      <div className="space-y-8">
         {/* 倒數計時與進度卡片 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-3xl p-6 text-white shadow-lg">
+          <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-3xl p-6 text-white shadow-xl">
             <div className="flex items-center gap-3 mb-2">
               <Target size={24} />
               <h3 className="font-black text-lg">剩餘公里</h3>
@@ -501,7 +629,7 @@ const SelfDisciplinePage: React.FC<SelfDisciplinePageProps> = ({ isLoggedIn, set
             </div>
           </div>
           
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl p-6 text-white shadow-lg">
+          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl p-6 text-white shadow-xl">
             <div className="flex items-center gap-3 mb-2">
               <Calendar size={24} />
               <h3 className="font-black text-lg">剩餘天數</h3>
@@ -510,7 +638,7 @@ const SelfDisciplinePage: React.FC<SelfDisciplinePageProps> = ({ isLoggedIn, set
             <div className="text-blue-100 text-sm">比賽日期：3/7 - 3/16</div>
           </div>
           
-          <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-3xl p-6 text-white shadow-lg">
+          <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-3xl p-6 text-white shadow-xl">
             <div className="flex items-center gap-3 mb-2">
               <Award size={24} />
               <h3 className="font-black text-lg">已完成</h3>
@@ -520,9 +648,19 @@ const SelfDisciplinePage: React.FC<SelfDisciplinePageProps> = ({ isLoggedIn, set
           </div>
         </div>
         
+        {/* 分隔線 */}
+        <div className="relative py-4">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t-2 border-slate-200"></div>
+          </div>
+          <div className="relative flex justify-center">
+            <span className="bg-[#f9f5f6] px-4 text-sm font-bold text-slate-400">GPS 追蹤區域</span>
+          </div>
+        </div>
+        
         {/* GPS 追蹤卡片（訓練中顯示） */}
         {isTracking && currentTrainingDay !== null && (
-          <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-3xl p-8 text-white shadow-xl animate-in slide-in-from-top">
+          <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-3xl p-8 text-white shadow-2xl animate-in slide-in-from-top border-4 border-indigo-300">
             <div className="text-center mb-6">
               <h3 className="text-2xl font-black mb-2 flex items-center justify-center gap-2">
                 <Navigation className="animate-pulse" size={28} /> GPS 追蹤中
@@ -552,93 +690,108 @@ const SelfDisciplinePage: React.FC<SelfDisciplinePageProps> = ({ isLoggedIn, set
             
             <button
               onClick={stopTraining}
-              className="w-full py-4 bg-white text-indigo-600 hover:bg-indigo-50 rounded-2xl font-black transition-all flex items-center justify-center gap-2 active:scale-95"
+              className="w-full py-4 bg-white text-indigo-600 hover:bg-indigo-50 rounded-2xl font-black transition-all flex items-center justify-center gap-2 active:scale-95 shadow-lg"
             >
               <CheckCircle2 size={24} /> 完成訓練
             </button>
           </div>
         )}
         
+        {/* 分隔線 */}
+        <div className="relative py-4">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t-2 border-slate-200"></div>
+          </div>
+          <div className="relative flex justify-center">
+            <span className="bg-[#f9f5f6] px-4 text-sm font-bold text-slate-400">每日訓練計畫</span>
+          </div>
+        </div>
+        
         {/* 每日計畫表格 */}
-        <div className="bg-white/90 rounded-[2.5rem] p-8 shadow-sm border border-slate-50">
+        <div className="bg-white/90 rounded-[2.5rem] p-8 shadow-lg border-2 border-slate-100">
           <h2 className="text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
             <CalendarIcon className="text-pink-500" size={28} /> 訓練計畫表
           </h2>
           
-          <div className="space-y-3">
+          <div className="space-y-4">
             {dailyPlans.map((plan, index) => (
-              <div
-                key={index}
-                className={`p-5 rounded-2xl border-2 transition-all ${
-                  plan.completed
-                    ? 'bg-green-50 border-green-200'
-                    : currentTrainingDay === index
-                    ? 'bg-indigo-50 border-indigo-300'
-                    : 'bg-white border-slate-100 hover:border-pink-200'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-14 h-14 rounded-xl flex flex-col items-center justify-center font-black ${
-                      plan.completed
-                        ? 'bg-green-500 text-white'
-                        : 'bg-pink-100 text-pink-600'
-                    }`}>
-                      <div className="text-xs">DAY</div>
-                      <div className="text-xl">{plan.day}</div>
+              <div key={index}>
+                <div
+                  className={`p-5 rounded-2xl border-2 transition-all ${
+                    plan.completed
+                      ? 'bg-green-50 border-green-300 shadow-md'
+                      : currentTrainingDay === index
+                      ? 'bg-indigo-50 border-indigo-400 shadow-lg'
+                      : 'bg-white border-slate-200 hover:border-pink-300 hover:shadow-md'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-14 h-14 rounded-xl flex flex-col items-center justify-center font-black shadow-md ${
+                        plan.completed
+                          ? 'bg-green-500 text-white'
+                          : 'bg-pink-100 text-pink-600'
+                      }`}>
+                        <div className="text-xs">DAY</div>
+                        <div className="text-xl">{plan.day}</div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-black text-slate-800 text-lg">
+                          {new Date(plan.date).toLocaleDateString('zh-TW', { month: 'long', day: 'numeric' })}
+                        </h4>
+                        <p className="text-sm text-slate-500">{plan.date}</p>
+                      </div>
                     </div>
                     
-                    <div>
-                      <h4 className="font-black text-slate-800 text-lg">
-                        {new Date(plan.date).toLocaleDateString('zh-TW', { month: 'long', day: 'numeric' })}
-                      </h4>
-                      <p className="text-sm text-slate-500">{plan.date}</p>
-                    </div>
-                  </div>
-                  
-                  {plan.completed && (
-                    <div className="flex items-center gap-2 text-green-600 font-bold">
-                      <CheckCircle size={24} />
-                      <span>已完成</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                  <div className="bg-slate-50 p-4 rounded-xl">
-                    <div className="text-xs text-slate-500 mb-1">計畫距離</div>
-                    <div className="text-2xl font-black text-slate-800">{plan.plannedDistance} km</div>
-                  </div>
-                  
-                  <div className="bg-slate-50 p-4 rounded-xl">
-                    <div className="text-xs text-slate-500 mb-1">推薦地點</div>
-                    <div className="text-sm font-bold text-slate-800 flex items-center gap-1">
-                      <MapPin size={14} className="text-pink-500" />
-                      {plan.recommendedLocation}
-                    </div>
-                  </div>
-                  
-                  <div className="bg-slate-50 p-4 rounded-xl">
-                    {plan.completed ? (
-                      <>
-                        <div className="text-xs text-slate-500 mb-1">實際距離</div>
-                        <div className="text-2xl font-black text-green-600">{plan.actualDistance} km</div>
-                      </>
-                    ) : (
-                      <button
-                        onClick={() => startTraining(index)}
-                        disabled={isTracking}
-                        className={`w-full py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
-                          isTracking
-                            ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                            : 'bg-pink-500 text-white hover:bg-pink-600 active:scale-95'
-                        }`}
-                      >
-                        <Play size={16} fill="currentColor" /> 訓練去
-                      </button>
+                    {plan.completed && (
+                      <div className="flex items-center gap-2 text-green-600 font-bold">
+                        <CheckCircle size={24} />
+                        <span>已完成</span>
+                      </div>
                     )}
                   </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                      <div className="text-xs text-slate-500 mb-1">計畫距離</div>
+                      <div className="text-2xl font-black text-slate-800">{plan.plannedDistance} km</div>
+                    </div>
+                    
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                      <div className="text-xs text-slate-500 mb-1">推薦地點</div>
+                      <div className="text-sm font-bold text-slate-800 flex items-center gap-1">
+                        <MapPin size={14} className="text-pink-500" />
+                        {plan.recommendedLocation}
+                      </div>
+                    </div>
+                    
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                      {plan.completed ? (
+                        <>
+                          <div className="text-xs text-slate-500 mb-1">實際距離</div>
+                          <div className="text-2xl font-black text-green-600">{plan.actualDistance} km</div>
+                        </>
+                      ) : (
+                        <button
+                          onClick={() => startTraining(index)}
+                          disabled={isTracking}
+                          className={`w-full py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
+                            isTracking
+                              ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                              : 'bg-pink-500 text-white hover:bg-pink-600 active:scale-95 shadow-md'
+                          }`}
+                        >
+                          <Play size={16} fill="currentColor" /> 訓練去
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
+                {/* 分隔線 between items */}
+                {index < dailyPlans.length - 1 && (
+                  <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent my-2"></div>
+                )}
               </div>
             ))}
           </div>
@@ -646,7 +799,7 @@ const SelfDisciplinePage: React.FC<SelfDisciplinePageProps> = ({ isLoggedIn, set
         
         {/* 提示訊息 */}
         {dailyPlans.length > 0 && totalCompleted === 0 && (
-          <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-6 flex items-start gap-4">
+          <div className="bg-blue-50 border-2 border-blue-300 rounded-2xl p-6 flex items-start gap-4 shadow-md">
             <AlertCircle className="text-blue-500 flex-shrink-0 mt-1" size={24} />
             <div>
               <h4 className="font-black text-blue-900 mb-2">開始您的挑戰！</h4>
@@ -795,6 +948,12 @@ const SelfDisciplinePage: React.FC<SelfDisciplinePageProps> = ({ isLoggedIn, set
       
       {/* 地區選擇彈窗 */}
       {showRegionModal && <RegionModal />}
+      
+      {/* 練跑地點展示彈窗 */}
+      {showRouteDisplayModal && <RouteDisplayModal />}
+      
+      {/* 慶祝動畫 */}
+      {showCelebration && <Celebration onClose={() => setShowCelebration(false)} />}
       
       {/* Header */}
       <header className="max-w-7xl mx-auto flex justify-between items-center mb-12 relative z-20">

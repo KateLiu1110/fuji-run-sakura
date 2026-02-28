@@ -128,7 +128,7 @@ async function fetchApi<T>(
 
     return { data };
   } catch (error) {
-    console.error('API Error:', error);
+    // 静默处理连接失败，让组件使用默认数据
     return { error: '網絡連接失敗，請檢查後端服務是否運行' };
   }
 }
@@ -271,6 +271,7 @@ export const api = {
   run: runApi,
   comment: commentApi,
   route: routeApi,
+  registration: registrationApi,
   health: healthApi,
 };
 

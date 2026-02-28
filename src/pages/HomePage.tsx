@@ -15,6 +15,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigateToDiscipline }) => {
   const [activeSection, setActiveSection] = useState('home');
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(true);
 
   // 監測滾動進度與當前區塊
   useEffect(() => {
@@ -63,7 +64,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigateToDiscipline }) => {
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800 relative">
       <SakuraFalling />
-      
+           
       {/* 滾動進度條 */}
       <div 
         className="fixed top-0 left-0 h-1 bg-pink-500 z-[100] transition-all duration-300" 

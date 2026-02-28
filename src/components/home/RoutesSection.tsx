@@ -35,7 +35,7 @@ const RoutesSection: React.FC<RoutesSectionProps> = ({ routes: propRoutes }) => 
           setRoutes(defaultRoutes);
         }
       } catch (error) {
-        console.error('Failed to fetch routes:', error);
+        // 静默使用默认数据
         setRoutes(defaultRoutes);
       } finally {
         setLoading(false);
