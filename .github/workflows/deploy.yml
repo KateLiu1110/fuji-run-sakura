@@ -1,8 +1,8 @@
-name: Deploy Frontend to GitHub Pages
+name: Deploy React Frontend
 
 on:
   push:
-    branches: [ "feature/UI" ] # 當妳 push 到這個分支時觸發
+    branches: [ "feature/UI" ]
   workflow_dispatch:
 
 permissions:
@@ -23,17 +23,19 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install Frontend Dependencies
         run: npm install
 
-      - name: Build
-        run: npm run build # 這會產生 dist 或 build 資料夾
+      - name: Build React App
+        run: npm run build # 確保 package.json 裡的 build 指令正確
+        env:
+          # 如果妳有環境變數（例如 API 地址），可以放在這裡
+          VITE_API_URL: https://your-python-backend.onrender.com 
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # 如果妳的編譯產出資料夾名稱是 build，請將 dist 改成 build
-          path: ./dist 
+          path: ./dist # 如果產出資料夾是 build，請改為 ./build
 
   deploy:
     environment:
