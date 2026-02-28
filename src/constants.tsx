@@ -1,5 +1,5 @@
 
-import { Region, SakuraRoute, TrainingGroup } from './types';
+import { Region, SakuraRoute, TrainingGroup } from './types/index';
 
 export const SAKURA_ROUTES: SakuraRoute[] = [
   {

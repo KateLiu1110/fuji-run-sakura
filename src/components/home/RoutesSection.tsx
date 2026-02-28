@@ -7,17 +7,17 @@ interface RoutesSectionProps {
 }
 
 const RoutesSection: React.FC<RoutesSectionProps> = ({ routes: propRoutes }) => {
-  const [showMapModal, setShowMapModal] = useState(false);
-  const [selectedRoute, setSelectedRoute] = useState<{name: string, location?: string} | null>(null);
-  const [routes, setRoutes] = useState<SimpleRoute[]>([]);
-  const [loading, setLoading] = useState(true);
-
   const defaultRoutes: SimpleRoute[] = [
     { name: "武陵農場櫻花跑", dist: "10km", elevation: "300m", type: "櫻花季限定", color: "bg-pink-100 text-pink-700" },
     { name: "淡水河濱美景", dist: "15km", elevation: "10m", type: "熱門路線", color: "bg-blue-100 text-blue-700" },
     { name: "陽明山越野徑", dist: "8km", elevation: "450m", type: "體能挑戰", color: "bg-green-100 text-green-700" },
     { name: "阿里山雲端路跑", dist: "21km", elevation: "600m", type: "專業推薦", color: "bg-orange-100 text-orange-700" },
   ];
+
+  const [showMapModal, setShowMapModal] = useState(false);
+  const [selectedRoute, setSelectedRoute] = useState<{name: string, location?: string} | null>(null);
+  const [routes, setRoutes] = useState<SimpleRoute[]>(defaultRoutes);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRoutes = async () => {

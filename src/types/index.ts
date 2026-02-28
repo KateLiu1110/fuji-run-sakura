@@ -6,6 +6,13 @@ export interface User {
   avatar?: string;
 }
 
+// 区域枚举
+export enum Region {
+  NORTH = '北部',
+  CENTRAL = '中部',
+  SOUTH = '南部'
+}
+
 // 评论相关类型
 export interface Comment {
   id: string;
@@ -61,11 +68,24 @@ export interface SakuraRoute {
   name: string;
   location: string;
   distance: number;
-  difficulty: 'easy' | 'medium' | 'hard';
-  sakuraLevel: number; // 1-5
+  difficulty?: 'easy' | 'medium' | 'hard';
+  sakuraLevel?: number; // 1-5
   description: string;
   imageUrl?: string;
+  image?: string;
   bestSeason?: string;
+  region?: Region;
+  applyRequired?: boolean;
+}
+
+// 训练团体类型
+export interface TrainingGroup {
+  id: string;
+  name: string;
+  location: string;
+  tag: string;
+  description: string;
+  image: string;
 }
 
 // GPS 追踪相关类型

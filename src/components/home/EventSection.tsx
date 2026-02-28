@@ -6,15 +6,15 @@ interface EventSectionProps {
 }
 
 const EventSection: React.FC<EventSectionProps> = ({ steps: propSteps }) => {
-  const [steps, setSteps] = useState<RegistrationStep[]>([]);
-  const [loading, setLoading] = useState(true);
-
   const defaultSteps: RegistrationStep[] = [
     { title: "註冊帳號", desc: "建立您的跑者專屬檔案" },
     { title: "上傳數據", desc: "串聯 Strava 或 Garmin GPS" },
     { title: "線上報名", desc: "選擇挑戰組別 (10k/半馬/全馬)" },
     { title: "解鎖榮耀", desc: "累積里程領取實體金牌" },
   ];
+
+  const [steps, setSteps] = useState<RegistrationStep[]>(defaultSteps);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSteps = async () => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Send, MessageSquare } from 'lucide-react';
 // 記得確認這兩個路徑是否符合你專案的實際位置
-import { Comment } from '../../types';
+import { Comment } from '../types';
 import { useCommunity } from '../store/CommunityContext';
  
 const BoardSection: React.FC = () => {

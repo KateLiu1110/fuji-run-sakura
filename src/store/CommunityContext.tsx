@@ -1,14 +1,9 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import { Comment, CommunityPost } from '../types';
+import { Comment } from '../types';
 
 interface CommunityContextType {
   comments: Comment[];
-  posts: CommunityPost[];
   addComment: (comment: Comment) => Promise<void>;
-  deleteComment: (commentId: string) => void;
-  addPost: (post: CommunityPost) => Promise<void>;
-  likePost: (postId: string) => void;
-  isLoading: boolean;
 }
 
 const CommunityContext = createContext<CommunityContextType | undefined>(undefined);
@@ -32,55 +27,20 @@ export const CommunityProvider: React.FC<CommunityProviderProps> = ({ children }
       timestamp: new Date() 
     },
   ]);
-  const [posts, setPosts] = useState<CommunityPost[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   const addComment = useCallback(async (comment: Comment) => {
-    setIsLoading(true);
     try {
       // TODO: 调用后端 API
       setComments(prev => [comment, ...prev]);
     } catch (error) {
       console.error('Error adding comment:', error);
       throw error;
-    } finally {
-      setIsLoading(false);
     }
-  }, []);
-
-  const deleteComment = useCallback((commentId: string) => {
-    setComments(prev => prev.filter(c => c.id !== commentId));
-    // TODO: 调用后端 API
-  }, []);
-
-  const addPost = useCallback(async (post: CommunityPost) => {
-    setIsLoading(true);
-    try {
-      // TODO: 调用后端 API
-      setPosts(prev => [post, ...prev]);
-    } catch (error) {
-      console.error('Error adding post:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  const likePost = useCallback((postId: string) => {
-    setPosts(prev => prev.map(post =>
-      post.id === postId ? { ...post, likes: post.likes + 1 } : post
-    ));
-    // TODO: 调用后端 API
   }, []);
 
   const value: CommunityContextType = {
     comments,
-    posts,
     addComment,
-    deleteComment,
-    addPost,
-    likePost,
-    isLoading,
   };
 
   return <CommunityContext.Provider value={value}>{children}</CommunityContext.Provider>;
